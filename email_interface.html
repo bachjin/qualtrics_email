@@ -117,5 +117,66 @@
     
     <!-- Load the email.js file -->
     <script src="email.js"></script>
+
+    <!-- Load the addons -->
+    <div id="addon-selector" style="position: fixed; top: 10px; right: 10px; background: white; border: 1px solid #ccc; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
+        <label for="addon-select" style="display: block; margin-bottom: 5px; font-weight: bold;">Select Addon:</label>
+        <select id="addon-select" style="margin-bottom: 10px; padding: 5px;">
+            <option value="">-- Select an addon --</option>
+            <option value="addon_0.js">Addon 0 (Temporary message)</option>
+            <option value="addon_01.js">Addon 01 (Progression of elements)</option>
+            <option value="addon_02.js">Addon 02 (Confidence indicators)</option>
+            <option value="addon_03.js">Addon 03 (Hover overlays)</option>
+            <option value="addon_04.js">Addon 04 (Click interruptions)</option>
+            <option value="addon_05.js">Addon 05 (Top banner)</option>
+            <option value="addon_06.js">Addon 06 (Suspicious text underlines)</option>
+            <option value="addon_07.js">Addon 07 (Dashboard with bullet points)</option>
+            <option value="addon_08.js">Addon 08 (Visual dashboard)</option>
+            <option value="addon_09.js">Addon 09 (Suspicious element symbols)</option>
+            <option value="addon_10.js">Addon 10 (Chatbot button/window)</option>
+            <option value="addon_11.js">Addon 11 (Descriptive chatbot)</option>
+            <option value="addon_12.js">Addon 12 (Interactive chatbot)</option>
+            <option value="addon_13.js">Addon 13 (Social reporting dashboard)</option>
+            <option value="addon_14.js">Addon 14 (Countdown timer)</option>
+            <option value="addon_15.js">Addon 15 (Context explanation)</option>
+        </select>
+        <button id="execute-addon" style="padding: 5px 10px; background: #007cba; color: white; border: none; border-radius: 3px; cursor: pointer;">Execute</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var executeButton = document.getElementById('execute-addon');
+            var addonSelect = document.getElementById('addon-select');
+            
+            executeButton.addEventListener('click', function() {
+                var selectedAddon = addonSelect.value;
+                if (!selectedAddon) {
+                    alert('Please select an addon first');
+                    return;
+                }
+                
+                // Remove any previously loaded addon scripts
+                var existingScripts = document.querySelectorAll('script[data-addon]');
+                existingScripts.forEach(function(script) {
+                    script.remove();
+                });
+                
+                // Create and load the selected addon script
+                var script = document.createElement('script');
+                script.src = 'addons/' + selectedAddon;
+                script.setAttribute('data-addon', 'true');
+                script.onload = function() {
+                    console.log('Addon loaded:', selectedAddon);
+                };
+                script.onerror = function() {
+                    console.error('Failed to load addon:', selectedAddon);
+                    alert('Failed to load addon: ' + selectedAddon);
+                };
+                
+                document.head.appendChild(script);
+            });
+        });
+    </script>
+    <!-- <script src="addons/addon_1.js"></script> -->
 </body>
 </html> 

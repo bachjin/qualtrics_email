@@ -3,6 +3,17 @@ Qualtrics.SurveyEngine.addOnload(function () {
 
 });
 
+Qualtrics.SurveyEngine.addOnUnload(function () {
+    /*Place your JavaScript here to run when the page is unloaded*/
+
+    // Clean up the email interface styles when leaving this question
+    var existingStyle = document.getElementById('email-interface-styles');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+
+});
+
 var something = 'something';
 
 Qualtrics.SurveyEngine.addOnReady(function () {
@@ -64,13 +75,12 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				border-radius: 8px 8px 0 0;
 			">
 				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-					<h2 style="margin: 0; color: #333; font-size: 18px;">Project Update - Q1 Results</h2>
+					<h2 style="margin: 0; color: #333; font-size: 18px;">Account Security Alert</h2>
 					<span style="color: #666; font-size: 14px;">2 hours ago</span>
 				</div>
 				<div style="color: #666; font-size: 14px;">
 					<strong>From:</strong> "Sarah Johnson" &lt;sarah.johnson@company.com&gt;<br>
 					<strong>To:</strong> "You" &lt;you@company.com&gt;<br>
-					<strong>Subject:</strong> Project Update - Q1 Results
 				</div>
 			</div>
 			
@@ -79,6 +89,9 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				padding: 20px;
 				line-height: 1.6;
 				color: #333;
+				height: 400px;
+				overflow-y: auto;
+				border-bottom: 1px solid #e0e0e0;
 			"> ` + phishyContent + `</div>
 			
 			<!-- Action Buttons -->
@@ -147,6 +160,16 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 					font-size: 14px;
 					font-weight: 500;
 				">Back</button>
+				<button id="change-content-btn" style="
+					background: #fd7e14;
+					color: white;
+					border: none;
+					padding: 10px 20px;
+					border-radius: 4px;
+					cursor: pointer;
+					font-size: 14px;
+					font-weight: 500;
+				">Display Normal Email</button>
 			</div>
 			
 			<!-- Reply Section (shown by default) -->
@@ -240,17 +263,6 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 								<div>This appears to be a legitimate business email. Safe to reply.</div>
 							</div>
 						</div>
-						
-						<button id="change-suggestion" style="
-							background: rgba(255,255,255,0.2);
-							color: white;
-							border: 1px solid rgba(255,255,255,0.3);
-							padding: 6px 12px;
-							border-radius: 6px;
-							cursor: pointer;
-							font-size: 11px;
-							width: 100%;
-						">Simulate Phishing Detection</button>
 					</div>
 				</div>
 				
@@ -305,6 +317,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		#back-btn:hover { background: #545b62 !important; }
 		#send-reply-btn:hover { background: #218838 !important; }
 		#save-draft-btn:hover { background: #e0a800 !important; }
+		#change-content-btn:hover { background: #e8650e !important; }
 		#reply-text:focus {
 			outline: none;
 			border-color: #007bff;
@@ -329,10 +342,6 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				opacity: 1;
 				transform: translateY(0);
 			}
-		}
-		
-		#change-suggestion:hover {
-			background: rgba(255,255,255,0.3) !important;
 		}
 		
 		#close-ai-mobile:hover {
@@ -427,23 +436,16 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         }
     });
 
-    document.getElementById('change-suggestion').addEventListener('click', function () {
+    document.getElementById('change-content-btn').addEventListener('click', function () {
+        var emailBody = document.getElementById('email-body');
         var aiContent = document.getElementById('ai-content');
         isPhishingMode = !isPhishingMode;
 
         if (isPhishingMode) {
-            aiContent.innerHTML = `
-				<div style="background: rgba(220,53,69,0.3); padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(220,53,69,0.5);">
-					<div style="font-weight: 500; margin-bottom: 4px;">⚠️ PHISHING DETECTED:</div>
-					<div>Suspicious sender patterns and unusual urgency detected</div>
-				</div>
-				<div style="background: rgba(220,53,69,0.2); padding: 10px; border-radius: 6px;">
-					<div style="font-weight: 500; margin-bottom: 4px;">🚨 Warning:</div>
-					<div>DO NOT reply or click any links. Report this email immediately.</div>
-				</div>
-			`;
-            this.textContent = 'Show Safe Email';
-        } else {
+            emailBody.innerHTML = emailContent;
+            this.textContent = 'Display Phishing Email';
+            this.style.background = '#28a745';
+            // Update AI analysis for normal email
             aiContent.innerHTML = `
 				<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
 					<div style="font-weight: 500; margin-bottom: 4px;">✅ Email Analysis:</div>
@@ -454,7 +456,21 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 					<div>This appears to be a legitimate business email. Safe to reply.</div>
 				</div>
 			`;
-            this.textContent = 'Simulate Phishing Detection';
+        } else {
+            emailBody.innerHTML = phishyContent;
+            this.textContent = 'Display Normal Email';
+            this.style.background = '#dc3545';
+            // Update AI analysis for phishing email
+            aiContent.innerHTML = `
+				<div style="background: rgba(220,53,69,0.3); padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(220,53,69,0.5);">
+					<div style="font-weight: 500; margin-bottom: 4px;">⚠️ PHISHING DETECTED:</div>
+					<div>Suspicious sender patterns and unusual urgency detected</div>
+				</div>
+				<div style="background: rgba(220,53,69,0.2); padding: 10px; border-radius: 6px;">
+					<div style="font-weight: 500; margin-bottom: 4px;">🚨 Warning:</div>
+					<div>DO NOT reply or click any links. Report this email immediately.</div>
+				</div>
+			`;
         }
     });
 
@@ -535,14 +551,4 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
 });
 
-Qualtrics.SurveyEngine.addOnUnload(function () {
-    /*Place your JavaScript here to run when the page is unloaded*/
-
-    // Clean up the email interface styles when leaving this question
-    var existingStyle = document.getElementById('email-interface-styles');
-    if (existingStyle) {
-        existingStyle.remove();
-    }
-
-});
 
