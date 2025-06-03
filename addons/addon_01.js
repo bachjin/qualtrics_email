@@ -5,13 +5,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Small delay to ensure email interface is loaded
     setTimeout(function() {
-        initPhishingIndicator();
+        initPhishingHelper();
     }, 200);
 });
 
-initPhishingIndicator();
+initPhishingHelper();
 
-function initPhishingIndicator() {
+function initPhishingHelper() {
     // Small delay to ensure email interface is loaded
     setTimeout(function() {
         var emailContainer = document.getElementById('email-container');

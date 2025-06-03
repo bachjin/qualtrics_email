@@ -490,10 +490,10 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		var attachmentContainer = document.getElementById('attachment-container');
 		if (attachmentContainer.style.display === 'none' || attachmentContainer.style.display === '') {
 			attachmentContainer.style.display = 'block';
-			this.textContent = 'Hide Attachments';
+			this.textContent = 'Hide Attachments (1)';
 		} else {
 			attachmentContainer.style.display = 'none';
-			this.textContent = 'Show Attachments';
+			this.textContent = 'Show Attachments (1)';
 		}
 	});
 
@@ -549,6 +549,11 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         Qualtrics.SurveyEngine.setEmbeddedData('emailReply', this.value);
     });
 
+
+	initPhishingHelper();
 });
 
 
+function initPhishingHelper() {
+	
+}
