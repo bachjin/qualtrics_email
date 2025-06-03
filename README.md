@@ -1,136 +1,242 @@
-# Phishing Email Scenario Testing Framework
+# Qualtrics Email Phishing Study System
 
-This framework allows you to easily test different phishing detection scenarios individually in both local development and Qualtrics environments.
+A comprehensive email interface simulation system for conducting phishing awareness studies in Qualtrics. This system provides a realistic email environment with various security indicators and interaction patterns to study user behavior when encountering potentially malicious emails.
 
-## 📁 File Structure
+## 🎯 Purpose
 
-```
-your_project/
-├── email.js                     # Base email interface (your existing code)
-├── scenario_manager.js          # Provides API for scenarios to hook into
-├── scenario_tester.html         # Local testing interface with scenario switcher
-├── email_interface.html         # Your original testing file
-├── scenarios/                   # Individual scenario files
-│   ├── scenario_01_progress_bar.js
-│   ├── scenario_06_underline_suspicious.js
-│   ├── scenario_12_interactive_chatbot.js
-│   └── ... (add more scenarios)
-└── README.md
-```
+This system is designed for academic research and cybersecurity training to:
+- Study user behavior when interacting with phishing emails
+- Test effectiveness of different security warning systems
+- Analyze decision-making patterns in email security contexts
+- Provide realistic email simulation environments for research
 
-## 🏗️ Architecture Overview
+## 📧 Core Features
 
-### 1. **Base Email Interface** (`email.js`)
-- Your existing email interface code
-- Remains unchanged - provides the foundation
-- Contains the core email HTML structure and basic functionality
+### Email Interface
+- **Realistic email client** with header, body, and action buttons
+- **Dynamic content switching** between normal and phishing emails
+- **Interactive elements** including links, attachments, and reply functionality
+- **Mobile-responsive design** that works across devices
+- **AI assistant integration** with contextual security advice
 
-### 2. **Scenario Manager** (`scenario_manager.js`)
-- Provides a clean API for scenarios to interact with the email interface
-- Handles element manipulation, event management, and cleanup
-- Automatically initializes when the email interface is ready
+### Email Content Types
+- **Normal Email**: Legitimate business communication about Q1 results
+- **Phishing Email**: Account security alert with suspicious characteristics
+- **Attachment Support**: Image attachments with security scanning simulation
 
-### 3. **Individual Scenario Files** (`scenarios/scenario_XX_name.js`)
-- Each scenario is a self-contained module
-- Uses the Scenario Manager API to modify the interface
-- Follows a consistent naming pattern for easy organization
+## 🔧 Addon System
 
-## 🚀 Usage
+The system uses a modular addon architecture. Each addon provides different security indicators and interaction patterns:
 
-### Local Development & Debugging
+### Addon 01: Progress Indicators
+**File**: `addon_01.js`
+- **Horizontal progress bar** showing phishing likelihood (0-100%)
+- **Circular confidence indicator** showing detection confidence
+- **Color-coded visualization** (green=safe, yellow=questionable, red=dangerous)
+- **Real-time updates** when email content changes
+- **Interactive elements** with smooth animations
 
-1. **Open `scenario_tester.html`** in your browser
-2. **Select a scenario** from the control panel
-3. **Click "Load Scenario"** to test it
-4. **Use "Reset Interface"** to clean up and test another scenario
+### Addon 02: Visual Status Indicators
+**File**: `addon_02.js`
+- **Status icons**: 🔒✅ (safe), ❓ (questionable), ☠️ (dangerous)
+- **Traffic light system** with realistic lighting effects
+- **Dynamic text labels** (SAFE/QUESTIONABLE/DANGEROUS)
+- **Confidence level display** (HIGH/MEDIUM/LOW)
+- **Pulsing animations** for warning states
+- **Click-to-cycle** functionality for testing different states
 
-### For Qualtrics
+### Addon 03: Hover Overlays
+**File**: `addon_03.js`
+- **Smart detection** of links and attachments
+- **Security overlay tooltips** with detailed risk assessment
+- **Visual indicators** (warning icons) that appear on hover
+- **Context-aware warnings** different for phishing vs. normal emails
+- **Detailed analysis** including risk level, threat type, and recommendations
+- **Positioning intelligence** to keep overlays within viewport
 
-1. **Copy the base `email.js`** into your Qualtrics question
-2. **Copy `scenario_manager.js`** into the same question 
-3. **Copy the specific scenario file** you want to test
-4. **Load in order**: `email.js` → `scenario_manager.js` → `scenario_XX.js`
+### Addon 04: Interruption Screens
+**File**: `addon_04.js`
+- **Full-screen modal** that blocks dangerous actions
+- **Click interception** for all links and attachments
+- **Detailed security warnings** with threat analysis
+- **Two-action system**: Cancel or Continue Despite Risk
+- **Context-sensitive content** based on email type
+- **Professional UI** with animations and responsive design
 
-## 📝 Creating New Scenarios
+## 🚀 Installation & Setup
 
-Create a new file: `scenarios/scenario_XX_name.js`
+### Prerequisites
+- Qualtrics survey platform access
+- JavaScript enabled in survey settings
+- Basic understanding of Qualtrics survey builder
+
+### Basic Setup
+
+1. **Create a new Qualtrics survey**
+2. **Add a Text/Graphic question** where you want the email interface
+3. **Copy the main email interface code** from `email.js`
+4. **Paste into the question's JavaScript** (OnReady section)
+
+### Adding Addons
+
+Choose one or more addons based on your study requirements:
 
 ```javascript
-// Scenario XX: Description of what it does
-window.addEventListener('scenarioManagerReady', function() {
-    
-    console.log('Scenario XX: Description - Activated');
-    
-    // Your scenario code here using EmailScenarioManager API
-    
-    // Example: Add a new element
-    EmailScenarioManager.addElement(
-        '<div>Your HTML here</div>', 
-        'email-container', 
-        'prepend'
-    );
-    
-    // Example: Add styles
-    EmailScenarioManager.addStyles(`
-        .your-class { color: red; }
-    `, 'scenario-xx-styles');
-    
-    // Example: Add event listener
-    EmailScenarioManager.addEventListener('your-element-id', 'click', function() {
-        // Handle click
-    });
-    
-    console.log('Scenario XX setup complete');
+// In your Qualtrics question JavaScript (OnReady section)
+
+// Core email interface (required)
+// ... paste email.js content ...
+
+// Add desired addon (choose one)
+// ... paste addon_01.js content ... // Progress indicators
+// ... paste addon_02.js content ... // Visual status indicators  
+// ... paste addon_03.js content ... // Hover overlays
+// ... paste addon_04.js content ... // Interruption screens
+```
+
+### Configuration
+
+Each addon can be customized by modifying variables at the top of the files:
+
+```javascript
+// Example configuration options
+var currentConfidence = 85;        // Initial confidence level
+var currentRiskLevel = 'dangerous'; // Initial risk assessment
+var enableAnimations = true;        // Enable/disable animations
+```
+
+## 📊 Data Collection
+
+The system automatically captures user interactions:
+
+### Embedded Data Variables
+- `emailReply`: User's reply text content
+- `buttonClicks`: Tracking of button interactions
+- `timeSpent`: Time spent viewing email
+- `addonInteractions`: Specific addon interactions
+
+### Custom Tracking
+Add additional tracking by modifying the event listeners:
+
+```javascript
+// Example: Track specific interactions
+element.addEventListener('click', function() {
+    Qualtrics.SurveyEngine.setEmbeddedData('customAction', 'value');
 });
 ```
 
-## 🔧 Scenario Manager API
+## 🎨 Customization
 
-### Element Manipulation
-- `addElement(html, targetId, position)` - Add new elements
-- `replaceContent(elementId, newContent)` - Replace element content
-- `modifyStyles(elementId, styles)` - Modify element styles
-- `toggleElement(elementId, show)` - Show/hide elements
+### Email Content
+Modify the email content variables in `email.js`:
 
-### Event Management
-- `addEventListener(elementId, event, handler)` - Add event listeners with auto-cleanup
-- `triggerEvent(eventName, data)` - Trigger custom events
+```javascript
+var emailContent = `Your normal email content...`;
+var phishyContent = `Your phishing email content...`;
+```
 
-### Styling
-- `addStyles(css, id)` - Add CSS styles with optional ID for cleanup
+### Visual Styling
+All addons include embedded CSS that can be customized:
 
-### Overlays & Modals
-- `showOverlay(content, id)` - Show overlay/modal
-- `hideOverlay(id)` - Hide overlay/modal
+```javascript
+style.textContent = `
+    .your-custom-class {
+        color: #custom-color;
+        // Add your styles here
+    }
+`;
+```
 
-### Cleanup
-- `cleanup()` - Remove all scenario-specific elements, styles, and events
+### Behavioral Logic
+Each addon includes configuration functions that can be modified:
 
-## ✅ Example Scenarios Included
+```javascript
+function updateConfidenceIndicators(riskLevel) {
+    // Customize behavior here
+}
+```
 
-1. **Scenario 1**: Progress bar showing phishing likelihood
-2. **Scenario 6**: Grammarly-style underlines for suspicious text  
-3. **Scenario 12**: Interactive chatbot with questions and points
+## 📱 Mobile Compatibility
 
-## 🔄 Adding More Scenarios
+All addons include responsive design with:
+- **Adaptive layouts** for small screens
+- **Touch-friendly interactions** for mobile devices
+- **Optimized positioning** to prevent off-screen elements
+- **Scalable fonts and buttons** for accessibility
 
-1. Create the scenario file: `scenarios/scenario_XX_name.js`
-2. Add it to the scenario tester: Update `scenario_tester.html` with a new button
-3. Test locally first, then deploy to Qualtrics
+## 🔬 Research Applications
 
-## 🏃‍♂️ Quick Start
+### Study Design Examples
 
-1. **Clone/download** this framework
-2. **Open `scenario_tester.html`** in your browser
-3. **Test existing scenarios** to see how they work
-4. **Create your own scenario** following the pattern
-5. **Deploy to Qualtrics** when ready
+1. **A/B Testing**: Compare effectiveness of different addon types
+2. **Behavioral Analysis**: Study click patterns with interruption screens
+3. **Training Effectiveness**: Measure learning with progress indicators
+4. **UI/UX Research**: Test different visual warning systems
 
-## 🎯 Benefits
+### Metrics Collection
 
-- ✅ **Isolated Testing**: Each scenario runs independently
-- ✅ **Easy Debugging**: Test scenarios individually in browser
-- ✅ **Clean Architecture**: Base email code remains untouched
-- ✅ **Reusable Components**: Scenario Manager API for consistency
-- ✅ **Quick Deployment**: Copy 3 files to Qualtrics per scenario
-- ✅ **Automatic Cleanup**: No conflicts between scenarios 
+- **Response times**: How quickly users make decisions
+- **Click-through rates**: Percentage who proceed despite warnings
+- **Interaction patterns**: Which elements users engage with
+- **Warning effectiveness**: How different alerts affect behavior
+
+## 🛡️ Security Considerations
+
+- This is a **simulation system** for research purposes only
+- **No real security threats** are present in the system
+- **Simulated warnings** should not be used in production environments
+- **Educational use only** - not for actual email security
+
+## 🔧 Technical Details
+
+### Browser Compatibility
+- **Modern browsers** (Chrome, Firefox, Safari, Edge)
+- **JavaScript ES5+** compatibility
+- **CSS3 features** for animations and styling
+- **Responsive design** principles
+
+### Performance
+- **Lightweight implementation** with minimal dependencies
+- **Efficient event handling** to prevent memory leaks
+- **Optimized animations** for smooth performance
+- **Modular loading** to include only needed features
+
+## 📚 Documentation
+
+### Function Reference
+
+#### Core Functions
+- `initEmailInterface()`: Initializes the main email interface
+- `switchEmailContent()`: Toggles between normal and phishing content
+- `handleUserInteraction()`: Processes user actions
+
+#### Addon Functions
+- `initConfidenceIndicators()`: Sets up progress/confidence displays
+- `initHoverOverlays()`: Enables hover warning system
+- `initInterruptionScreen()`: Activates click interruption modals
+
+## 🤝 Contributing
+
+When modifying or extending the system:
+
+1. **Follow the modular pattern** for new addons
+2. **Include responsive design** for mobile compatibility
+3. **Add embedded data tracking** for research purposes
+4. **Test across different browsers** and devices
+5. **Document any new features** or configuration options
+
+## 📄 License
+
+This system is designed for academic research and educational purposes. Please ensure compliance with your institution's research ethics guidelines when conducting studies with human participants.
+
+## 🆘 Support
+
+For technical issues or questions:
+1. Check browser console for JavaScript errors
+2. Verify Qualtrics JavaScript settings are enabled
+3. Test with minimal addon configuration first
+4. Ensure email content variables are properly defined
+
+---
+
+**Note**: This is a research tool for studying phishing awareness. It should not be used as actual email security software.
