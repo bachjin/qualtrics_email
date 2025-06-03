@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Interface - Local Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Interface Test</h1>
+        <div id="question-container"></div>
+    </div>
+
+    <script>
+        // Mock Qualtrics object for local testing
+        window.Qualtrics = {
+            SurveyEngine: {
+                // Store the callback functions
+                _onloadCallbacks: [],
+                _onreadyCallbacks: [],
+                _onunloadCallbacks: [],
+                
+                // Mock functions to register callbacks
+                addOnload: function(callback) {
+                    this._onloadCallbacks.push(callback);
+                },
+                
+                addOnReady: function(callback) {
+                    this._onreadyCallbacks.push(callback);
+                },
+                
+                addOnUnload: function(callback) {
+                    this._onunloadCallbacks.push(callback);
+                },
+                
+                // Mock embedded data function
+                setEmbeddedData: function(key, value) {
+                    console.log('Setting embedded data:', key, '=', value);
+                },
+                
+                // Simulate the question context
+                questionContainer: null
+            }
+        };
+
+        // Function to execute the Qualtrics callbacks
+        function executeQualtricsCallbacks() {
+            // Set up the question container
+            Qualtrics.SurveyEngine.questionContainer = document.getElementById('question-container');
+            
+            // Execute onload callbacks
+            Qualtrics.SurveyEngine._onloadCallbacks.forEach(function(callback) {
+                try {
+                    callback.call({
+                        questionContainer: Qualtrics.SurveyEngine.questionContainer
+                    });
+                } catch (e) {
+                    console.error('Error in onload callback:', e);
+                }
+            });
+            
+            // Execute onready callbacks
+            Qualtrics.SurveyEngine._onreadyCallbacks.forEach(function(callback) {
+                try {
+                    callback.call({
+                        questionContainer: Qualtrics.SurveyEngine.questionContainer
+                    });
+                } catch (e) {
+                    console.error('Error in onready callback:', e);
+                }
+            });
+        }
+
+        // Function to execute unload callbacks (for cleanup)
+        function executeUnloadCallbacks() {
+            Qualtrics.SurveyEngine._onunloadCallbacks.forEach(function(callback) {
+                try {
+                    callback.call({
+                        questionContainer: Qualtrics.SurveyEngine.questionContainer
+                    });
+                } catch (e) {
+                    console.error('Error in unload callback:', e);
+                }
+            });
+        }
+
+        // Load and execute when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure email.js is loaded
+            setTimeout(executeQualtricsCallbacks, 100);
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            executeUnloadCallbacks();
+        });
+    </script>
+    
+    <!-- Load the email.js file -->
+    <script src="email.js"></script>
+</body>
+</html> 
