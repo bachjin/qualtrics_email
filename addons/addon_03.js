@@ -23,6 +23,7 @@ function initPhishingHelper() {
         // Create overlay element
         var overlay = document.createElement('div');
         overlay.id = 'hover-security-overlay';
+        overlay.className = 'qualtrics-addon'; // Add common class for cleanup
         overlay.style.cssText = `
             position: fixed;
             display: none;

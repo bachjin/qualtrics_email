@@ -23,6 +23,7 @@ function initPhishingHelper() {
         // Create the interruption modal
         var modal = document.createElement('div');
         modal.id = 'security-interruption-modal';
+        modal.className = 'qualtrics-addon'; // Add common class for cleanup
         modal.style.cssText = `
             position: fixed;
             top: 0;
@@ -372,11 +373,20 @@ function initPhishingHelper() {
             var attachmentBtn = document.getElementById('show-attachments-btn');
             if (attachmentBtn) {
                 attachmentBtn.classList.add('intercepted-element');
-                var originalClick = attachmentBtn.onclick;
-                attachmentBtn.onclick = function(e) {
+                
+                // Store original onclick if it exists
+                var originalOnClick = attachmentBtn.onclick;
+                
+                // Remove original onclick to prevent immediate execution
+                attachmentBtn.onclick = null;
+                
+                // Add event listener to intercept clicks
+                attachmentBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    
                     showInterruptionModal(attachmentBtn, 'attachment', function() {
-                        // Execute original attachment button functionality
+                        // Execute original attachment button functionality only when user confirms
                         var attachmentContainer = document.getElementById('attachment-container');
                         if (attachmentContainer.style.display === 'none' || attachmentContainer.style.display === '') {
                             attachmentContainer.style.display = 'block';
@@ -386,7 +396,7 @@ function initPhishingHelper() {
                             attachmentBtn.textContent = 'Show Attachments (1)';
                         }
                     });
-                };
+                });
             }
         }
 

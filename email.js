@@ -12,6 +12,12 @@ Qualtrics.SurveyEngine.addOnUnload(function () {
         existingStyle.remove();
     }
 
+    // Clean up all addon elements using common class
+    var addonElements = document.querySelectorAll('.qualtrics-addon');
+    addonElements.forEach(function(element) {
+        element.remove();
+    });
+
 });
 
 var something = 'something';
@@ -19,9 +25,10 @@ var something = 'something';
 Qualtrics.SurveyEngine.addOnReady(function () {
     /*Place your JavaScript here to run when the page is fully displayed*/
 
-    // Get the question container and clear its content
+    // Get the question container and preserve its original content
     var questionContainer = this.questionContainer;
-    questionContainer.innerHTML = '';
+    // Save original content instead of clearing it
+    // questionContainer.innerHTML = '';
 
     // Define email content variable at the start of addOnReady function
     var emailContent = `
@@ -300,8 +307,10 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     console.log(s2);
 	console.log(something);
 
-    // Insert the email interface into the question container
-    questionContainer.innerHTML = emailInterface;
+    // Insert the email interface into the question container (append instead of replace)
+    var emailDiv = document.createElement('div');
+    emailDiv.innerHTML = emailInterface;
+    questionContainer.appendChild(emailDiv);
 
     // Add button hover effects and responsive styles
     var style = document.createElement('style');
@@ -444,7 +453,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         if (isPhishingMode) {
             emailBody.innerHTML = emailContent;
             this.textContent = 'Display Phishing Email';
-            this.style.background = '#28a745';
+            this.style.background = '#dc3545';
             // Update AI analysis for normal email
             aiContent.innerHTML = `
 				<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
@@ -459,7 +468,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         } else {
             emailBody.innerHTML = phishyContent;
             this.textContent = 'Display Normal Email';
-            this.style.background = '#dc3545';
+            this.style.background = '#28a745';
             // Update AI analysis for phishing email
             aiContent.innerHTML = `
 				<div style="background: rgba(220,53,69,0.3); padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(220,53,69,0.5);">

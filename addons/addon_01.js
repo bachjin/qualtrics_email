@@ -23,6 +23,7 @@ function initPhishingHelper() {
         // Create the confidence indicator container with both bar and circle
         var confidenceIndicator = document.createElement('div');
         confidenceIndicator.id = 'phishing-confidence-indicator';
+        confidenceIndicator.className = 'qualtrics-addon'; // Add common class for cleanup
         confidenceIndicator.innerHTML = `
             <div style="
                 position: fixed;
