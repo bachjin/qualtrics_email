@@ -44,7 +44,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             <li>New feature adoption rate: 78%</li>
         </ul>
         <p>I'd love to hear your thoughts on these results and discuss next steps for Q2.
-        </p>
+        You can view the detailed report <a href="#" onclick="alert('Normal email'); return false;" style="color: #0066cc;">here</a>.</p>
         <p>Best regards,<br>Sarah Johnson</p>
     `
 
@@ -54,7 +54,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		Your account security is our top priority.</p>
 		<p>To protect your account, please verify your information by clicking the link below:</p>
 		<p style="text-align: center;">
-			<a href="#" style="color: #0066cc;">Verify Account Now</a>
+			<a href="#" style="color: #0066cc;" onclick="alert('You are phished!'); return false;">Verify Account Now</a>
 		</p>
 		<p>If you do not take action within 24 hours, your account will be temporarily suspended.</p>
 		<p>This is an automated message, please do not reply.</p>
@@ -168,7 +168,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 					font-weight: 500;
 				">Back</button>
 				<button id="change-content-btn" style="
-					background: #fd7e14;
+					background: #28a745;
 					color: white;
 					border: none;
 					padding: 10px 20px;

@@ -77,6 +77,19 @@ The system uses a modular addon architecture. Each addon provides different secu
 3. **Copy the main email interface code** from `email.js`
 4. **Paste into the question's JavaScript** (OnReady section)
 
+5. **Test the interface** by running a local server:
+   ```bash
+   python3 -m http.server 8000
+   ```
+   Then navigate to `http://localhost:8000` to preview your email interface
+
+6. **Configure email content** by modifying the variables in the JavaScript:
+   ```javascript
+   var normalEmailContent = "Your safe email content here...";
+   var phishingEmailContent = "Your phishing email content here...";
+   ```
+
+
 ### Adding Addons
 
 Choose one or more addons based on your study requirements:

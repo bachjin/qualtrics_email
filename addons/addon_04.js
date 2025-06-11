@@ -372,31 +372,57 @@ function initPhishingHelper() {
             // Intercept attachment button clicks
             var attachmentBtn = document.getElementById('show-attachments-btn');
             if (attachmentBtn) {
+                console.log('DEBUG: Found attachment button, starting interception setup');
+                
                 attachmentBtn.classList.add('intercepted-element');
                 
-                // Store original onclick if it exists
-                var originalOnClick = attachmentBtn.onclick;
+                // Store current state for debugging
+                var attachmentContainer = document.getElementById('attachment-container');
+                console.log('DEBUG: Initial attachment container display:', attachmentContainer.style.display);
                 
-                // Remove original onclick to prevent immediate execution
-                attachmentBtn.onclick = null;
+                // Remove ALL existing event listeners by cloning the button
+                var newAttachmentBtn = attachmentBtn.cloneNode(true);
+                attachmentBtn.parentNode.replaceChild(newAttachmentBtn, attachmentBtn);
+                attachmentBtn = newAttachmentBtn; // Update reference
                 
-                // Add event listener to intercept clicks
+                console.log('DEBUG: Cloned button to remove existing listeners');
+                
+                // Add our intercepted event listener
                 attachmentBtn.addEventListener('click', function(e) {
+                    console.log('DEBUG: Addon click handler triggered');
+                    console.log('DEBUG: Before preventDefault - attachment display:', document.getElementById('attachment-container').style.display);
+                    
                     e.preventDefault();
                     e.stopPropagation();
                     
+                    console.log('DEBUG: After preventDefault - attachment display:', document.getElementById('attachment-container').style.display);
+                    
+                    // Store the current state before showing modal
+                    var attachmentContainer = document.getElementById('attachment-container');
+                    var isCurrentlyHidden = attachmentContainer.style.display === 'none' || attachmentContainer.style.display === '';
+                    
+                    console.log('DEBUG: About to show modal. isCurrentlyHidden:', isCurrentlyHidden);
+                    console.log('DEBUG: Attachment container display before modal:', attachmentContainer.style.display);
+                    
                     showInterruptionModal(attachmentBtn, 'attachment', function() {
-                        // Execute original attachment button functionality only when user confirms
-                        var attachmentContainer = document.getElementById('attachment-container');
-                        if (attachmentContainer.style.display === 'none' || attachmentContainer.style.display === '') {
+                        console.log('DEBUG: User clicked continue. Executing toggle...');
+                        
+                        // Execute the attachment toggle functionality only when user confirms
+                        if (isCurrentlyHidden) {
                             attachmentContainer.style.display = 'block';
                             attachmentBtn.textContent = 'Hide Attachments (1)';
+                            console.log('DEBUG: Showing attachments');
                         } else {
                             attachmentContainer.style.display = 'none';
                             attachmentBtn.textContent = 'Show Attachments (1)';
+                            console.log('DEBUG: Hiding attachments');
                         }
                     });
-                });
+                }, true); // Use capture phase
+                
+                console.log('DEBUG: Added new click listener to attachment button');
+            } else {
+                console.log('DEBUG: Attachment button not found!');
             }
         }
 

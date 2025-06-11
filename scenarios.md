@@ -14,6 +14,7 @@ To some extent, these are only building blocks. We can afterwards determine in w
    - A traffic light system, where a light shines in green, yellow, or red.
 3. When hovering over a link or attachment, display an overlay image or indicator
 4. When clicking on a link or attachment, display some sort of interruption screen where you need to clock on "Ok" to continue with the link or attachment.
+TODO: cannot stop the original action and 'cancel' works reversely
 
 ## Explainability Banners/Dashboards
 5. A banner that is at the top of the email.
