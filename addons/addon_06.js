@@ -20,7 +20,7 @@ function initPhishingHelper() {
             return;
         }
 
-        // Add styles for suspicious text underlines
+        // Add styles for suspicious text underlines and questionable text highlighting
         var style = document.createElement('style');
         style.id = 'suspicious-underline-styles';
         style.className = 'qualtrics-addon';
@@ -89,6 +89,51 @@ function initPhishingHelper() {
                 opacity: 1;
                 visibility: visible;
             }
+            
+            .questionable-text {
+                position: relative;
+                cursor: pointer;
+                background: rgba(255, 193, 7, 0.3);
+                padding: 1px 3px;
+                border-radius: 2px;
+            }
+            
+            .questionable-text:hover {
+                background: rgba(255, 193, 7, 0.5);
+            }
+            
+            .questionable-tooltip {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 193, 7, 0.95);
+                color: #333;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                white-space: nowrap;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+                margin-bottom: 5px;
+            }
+            
+            .questionable-tooltip::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 5px solid transparent;
+                border-top-color: rgba(255, 193, 7, 0.95);
+            }
+            
+            .questionable-text:hover .questionable-tooltip {
+                opacity: 1;
+                visibility: visible;
+            }
         `;
         document.head.appendChild(style);
 
@@ -109,7 +154,18 @@ function initPhishingHelper() {
                 'verify account',
                 'suspended',
                 'expires today',
-                'limited time'
+                'limited time',
+                'temporarily suspended',
+                'within 24 hours'
+            ];
+
+            // Define questionable phrases to highlight with yellow background
+            var questionablePatterns = [
+                'valued customer',
+                'automated message',
+                'do not reply',
+                'protect your account',
+                'security team'
             ];
 
             var content = emailBody.innerHTML;
@@ -119,6 +175,14 @@ function initPhishingHelper() {
                 content = content.replace(regex, function(match) {
                     return '<span class="suspicious-text" style="position: relative;">' + match + 
                            '<span class="suspicious-tooltip">Suspicious phrase detected</span></span>';
+                });
+            });
+
+            questionablePatterns.forEach(function(pattern) {
+                var regex = new RegExp('(' + pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                content = content.replace(regex, function(match) {
+                    return '<span class="questionable-text" style="position: relative;">' + match + 
+                           '<span class="questionable-tooltip">Questionable phrase detected</span></span>';
                 });
             });
 
