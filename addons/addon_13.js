@@ -27,7 +27,7 @@ function initPhishingHelper() {
         reportingDashboard.style.cssText = `
             position: fixed;
             top: 20px;
-            left: 20px;
+            right: 20px;
             width: 320px;
             background: white;
             border-radius: 12px;
@@ -76,7 +76,7 @@ function initPhishingHelper() {
                 text-align: center;
             ">
                 <div style="font-size: 24px; font-weight: bold; color: #e53e3e; margin-bottom: 4px;">
-                    ${reportCount}
+                    ` + reportCount + `
                 </div>
                 <div style="color: #666; font-size: 14px;">
                     people reported this email today
@@ -94,9 +94,9 @@ function initPhishingHelper() {
                     📊 Report Summary:
                 </div>
                 <ul style="margin: 0; padding-left: 16px; font-size: 13px; color: #4a5568;">
-                    <li>Suspicious links: ${Math.floor(reportCount * 0.7)} reports</li>
-                    <li>Fake sender: ${Math.floor(reportCount * 0.5)} reports</li>
-                    <li>Urgent language: ${Math.floor(reportCount * 0.8)} reports</li>
+                    <li>Suspicious links: ` + Math.floor(reportCount * 0.7) + ` reports</li>
+                    <li>Fake sender: ` + Math.floor(reportCount * 0.5) + ` reports</li>
+                    <li>Urgent language: ` + Math.floor(reportCount * 0.8) + ` reports</li>
                 </ul>
             </div>
             

@@ -26,6 +26,54 @@ function initPhishingHelper() {
             return;
         }
 
+        // Add styles for tooltips
+        var style = document.createElement('style');
+        style.id = 'suspicious-symbols-styles';
+        style.className = 'qualtrics-addon';
+        style.textContent = `
+            .suspicious-tooltip {
+                position: relative;
+                display: inline-block;
+            }
+            
+            .suspicious-tooltip .tooltip-text {
+                visibility: hidden;
+                width: 200px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px;
+                position: absolute;
+                z-index: 1001;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -100px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 12px;
+                line-height: 1.3;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+            
+            .suspicious-tooltip .tooltip-text::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+            
+            .suspicious-tooltip:hover .tooltip-text {
+                visibility: visible;
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+
         // Find and add suspicious symbols to specific elements
         var links = emailBody.querySelectorAll('a');
         var paragraphs = emailBody.querySelectorAll('p');
@@ -36,20 +84,27 @@ function initPhishingHelper() {
                 link.textContent.toLowerCase().includes('account') ||
                 link.textContent.toLowerCase().includes('click')) {
                 
+                var warningContainer = document.createElement('span');
+                warningContainer.className = 'qualtrics-addon suspicious-tooltip';
+                
                 var warningSymbol = document.createElement('span');
-                warningSymbol.className = 'qualtrics-addon';
                 warningSymbol.style.cssText = `
                     color: #dc3545;
                     font-size: 16px;
                     margin-left: 5px;
                     font-weight: bold;
                     cursor: pointer;
-                    title: "Suspicious link detected";
                 `;
                 warningSymbol.innerHTML = '⚠️';
-                warningSymbol.title = 'Suspicious link detected';
                 
-                link.parentNode.insertBefore(warningSymbol, link.nextSibling);
+                var tooltipText = document.createElement('span');
+                tooltipText.className = 'tooltip-text';
+                tooltipText.innerHTML = 'Suspicious link detected! This link may be part of a phishing attempt. Verify the URL before clicking.';
+                
+                warningContainer.appendChild(warningSymbol);
+                warningContainer.appendChild(tooltipText);
+                
+                link.parentNode.insertBefore(warningContainer, link.nextSibling);
             }
         });
 
@@ -61,8 +116,10 @@ function initPhishingHelper() {
                 text.includes('24 hours') ||
                 text.includes('suspended')) {
                 
+                var questionContainer = document.createElement('span');
+                questionContainer.className = 'qualtrics-addon suspicious-tooltip';
+                
                 var questionSymbol = document.createElement('span');
-                questionSymbol.className = 'qualtrics-addon';
                 questionSymbol.style.cssText = `
                     color: #ffc107;
                     font-size: 16px;
@@ -71,9 +128,15 @@ function initPhishingHelper() {
                     cursor: pointer;
                 `;
                 questionSymbol.innerHTML = '❓';
-                questionSymbol.title = 'Questionable content';
                 
-                paragraph.appendChild(questionSymbol);
+                var tooltipText = document.createElement('span');
+                tooltipText.className = 'tooltip-text';
+                tooltipText.innerHTML = 'Questionable content! This text uses urgency tactics commonly found in phishing emails.';
+                
+                questionContainer.appendChild(questionSymbol);
+                questionContainer.appendChild(tooltipText);
+                
+                paragraph.appendChild(questionContainer);
             }
         });
 
@@ -82,8 +145,10 @@ function initPhishingHelper() {
         if (emailHeader) {
             var fromField = emailHeader.querySelector('div:last-child');
             if (fromField && fromField.textContent.includes('Account Security Team')) {
+                var poisonContainer = document.createElement('span');
+                poisonContainer.className = 'qualtrics-addon suspicious-tooltip';
+                
                 var poisonSymbol = document.createElement('span');
-                poisonSymbol.className = 'qualtrics-addon';
                 poisonSymbol.style.cssText = `
                     color: #dc3545;
                     font-size: 18px;
@@ -92,9 +157,15 @@ function initPhishingHelper() {
                     cursor: pointer;
                 `;
                 poisonSymbol.innerHTML = '☠️';
-                poisonSymbol.title = 'Potentially dangerous sender';
                 
-                fromField.appendChild(poisonSymbol);
+                var tooltipText = document.createElement('span');
+                tooltipText.className = 'tooltip-text';
+                tooltipText.innerHTML = 'Potentially dangerous sender! This sender name is commonly used in phishing attacks to appear legitimate.';
+                
+                poisonContainer.appendChild(poisonSymbol);
+                poisonContainer.appendChild(tooltipText);
+                
+                fromField.appendChild(poisonContainer);
             }
         }
 

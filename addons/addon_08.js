@@ -27,7 +27,7 @@ function initPhishingHelper() {
         dashboard.style.cssText = `
             position: fixed;
             top: 20px;
-            left: 20px;
+            right: 20px;
             width: 300px;
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             border-radius: 12px;
@@ -47,20 +47,36 @@ function initPhishingHelper() {
                     <span style="font-size: 18px;">🛡️</span>
                     <strong style="font-size: 14px;">Security Dashboard</strong>
                 </div>
-                <button id="toggle-dashboard" style="
-                    background: rgba(255,255,255,0.2);
-                    border: 1px solid rgba(255,255,255,0.3);
-                    border-radius: 50%;
-                    width: 24px;
-                    height: 24px;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 0;
-                ">−</button>
+                <div style="display: flex; gap: 4px;">
+                    <button id="toggle-dashboard" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 1px solid rgba(255,255,255,0.3);
+                        border-radius: 50%;
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    ">−</button>
+                    <button id="close-dashboard" style="
+                        background: rgba(231, 76, 60, 0.3);
+                        border: 1px solid rgba(231, 76, 60, 0.5);
+                        border-radius: 50%;
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    ">×</button>
+                </div>
             </div>
             
             <div id="dashboard-content">
@@ -179,6 +195,11 @@ function initPhishingHelper() {
             }
         });
 
+        // Add close functionality
+        document.getElementById('close-dashboard').addEventListener('click', function() {
+            dashboard.remove();
+        });
+
         // Add responsive styles
         var dashboardStyle = document.createElement('style');
         dashboardStyle.className = 'qualtrics-addon';
@@ -196,6 +217,11 @@ function initPhishingHelper() {
             
             #toggle-dashboard:hover {
                 background: rgba(255,255,255,0.3) !important;
+                transform: scale(1.1);
+            }
+            
+            #close-dashboard:hover {
+                background: rgba(231, 76, 60, 0.5) !important;
                 transform: scale(1.1);
             }
         `;

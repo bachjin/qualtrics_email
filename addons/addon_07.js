@@ -28,7 +28,7 @@ function initPhishingHelper() {
             <div style="
                 position: fixed;
                 top: 20px;
-                left: 20px;
+                right: 20px;
                 background: rgba(255, 255, 255, 0.95);
                 border: 2px solid #007bff;
                 border-radius: 8px;
