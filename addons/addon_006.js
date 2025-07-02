@@ -1,3 +1,6 @@
+// Addon 06: Suspicious text underlines
+// Add a phishing confidence indicator bar to the email interface
+
 Qualtrics.SurveyEngine.addOnload(function () {
     /*Place your JavaScript here to run when the page loads*/
 
@@ -49,16 +52,16 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     `
 
 	var phishyContent = `
-		<p>Dear Valued Customer,</p>
-		<p>We have detected unusual activity on your account that requires immediate attention. 
+		<p>Dear <span class="phishy-highlight" data-warning="Generic greeting - real companies use your actual name">Valued Customer</span>,</p>
+		<p>We have detected <span class="phishy-underline" data-warning="Creates false urgency to pressure quick action">unusual activity</span> on your account that requires <span class="phishy-underline" data-warning="Urgency tactic to bypass critical thinking">immediate attention</span>. 
 		Your account security is our top priority.</p>
-		<p>To protect your account, please verify your information by clicking the link below:</p>
+		<p>To protect your account, please <span class="phishy-highlight" data-warning="Requests sensitive information - legitimate companies don't ask via email">verify your information</span> by clicking the link below:</p>
 		<p style="text-align: center;">
-			<a href="#" style="color: #0066cc;" onclick="alert('You are phished!'); return false;">Verify Account Now</a>
+			<a href="#" class="phishy-link" data-warning="Suspicious link - hover to see it doesn't go to official domain" style="color: #0066cc;" onclick="alert('You are phished!'); return false;">Verify Account Now</a>
 		</p>
-		<p>If you do not take action within 24 hours, your account will be temporarily suspended.</p>
-		<p>This is an automated message, please do not reply.</p>
-		<p>Best regards,<br>Account Security Team</p>
+		<p>If you do not take action within <span class="phishy-underline" data-warning="Artificial deadline to create pressure">24 hours</span>, your account will be <span class="phishy-highlight" data-warning="Threat of account suspension is a common phishing tactic">temporarily suspended</span>.</p>
+		<p>This is an <span class="phishy-underline" data-warning="Discourages replies to avoid detection">automated message, please do not reply</span>.</p>
+		<p>Best regards,<br><span class="phishy-highlight" data-warning="Vague sender identity - legitimate emails have specific names and departments">Account Security Team</span></p>
 	`
 
 
@@ -358,6 +361,99 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			transform: scale(1.1);
 		}
 		
+		/* Phishing indicator styles */
+		.phishy-highlight {
+			background: linear-gradient(120deg, #fff3cd 0%, #ffeaa7 100%);
+			padding: 2px 4px;
+			border-radius: 3px;
+			cursor: pointer;
+			position: relative;
+			border-bottom: 2px wavy #f39c12;
+			transition: all 0.3s ease;
+		}
+		
+		.phishy-underline {
+			border-bottom: 2px wavy #dc3545;
+			cursor: pointer;
+			position: relative;
+			padding: 1px 2px;
+			transition: all 0.3s ease;
+		}
+		
+		.phishy-link {
+			background: linear-gradient(120deg, #fff3cd 0%, #ffeaa7 100%);
+			padding: 4px 8px;
+			border-radius: 4px;
+			border: 2px solid #dc3545 !important;
+			cursor: pointer;
+			position: relative;
+			text-decoration: none !important;
+			transition: all 0.3s ease;
+			animation: pulse-warning 2s infinite;
+		}
+		
+		@keyframes pulse-warning {
+			0%, 100% { box-shadow: 0 0 5px rgba(220, 53, 69, 0.3); }
+			50% { box-shadow: 0 0 15px rgba(220, 53, 69, 0.6); }
+		}
+		
+		.phishy-highlight:hover, .phishy-underline:hover, .phishy-link:hover {
+			transform: scale(1.05);
+			z-index: 100;
+		}
+		
+		.phishy-highlight:hover {
+			background: linear-gradient(120deg, #ffe066 0%, #ffd700 100%);
+			box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+		}
+		
+		.phishy-underline:hover {
+			background: rgba(220, 53, 69, 0.1);
+			border-bottom-color: #c82333;
+		}
+		
+		.phishy-link:hover {
+			background: linear-gradient(120deg, #ffe066 0%, #ffd700 100%);
+			border-color: #c82333 !important;
+			box-shadow: 0 0 20px rgba(220, 53, 69, 0.8) !important;
+		}
+		
+		/* Bubble tooltip styles */
+		.phishing-tooltip {
+			position: absolute;
+			background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+			color: white;
+			padding: 10px 15px;
+			border-radius: 10px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.4;
+			max-width: 250px;
+			z-index: 10000;
+			opacity: 0;
+			transform: translateY(-5px);
+			transition: all 0.3s ease;
+			box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+			pointer-events: none;
+			white-space: normal;
+			text-align: left;
+		}
+		
+		.phishing-tooltip::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			border: 6px solid transparent;
+			border-top-color: #dc3545;
+		}
+		
+		.phishing-tooltip.show {
+			opacity: 1;
+			transform: translateY(-15px);
+		}
+		
 		/* Ensure AI suggestions box stays within viewport */
 		#reply-section {
 			overflow: visible !important;
@@ -558,11 +654,81 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         Qualtrics.SurveyEngine.setEmbeddedData('emailReply', this.value);
     });
 
-	// replaced with initPhishingHelper() from separate addons
-	initPhishingHelper();
+    // Phishing indicator bubble tooltip functionality
+    function addPhishingTooltips() {
+        var phishingElements = document.querySelectorAll('.phishy-highlight, .phishy-underline, .phishy-link');
+        
+        phishingElements.forEach(function(element) {
+            var tooltip = null;
+            
+            element.addEventListener('mouseenter', function(e) {
+                // Remove any existing tooltips
+                var existingTooltips = document.querySelectorAll('.phishing-tooltip');
+                existingTooltips.forEach(function(tip) {
+                    tip.remove();
+                });
+                
+                // Create new tooltip
+                tooltip = document.createElement('div');
+                tooltip.className = 'phishing-tooltip';
+                tooltip.innerHTML = '⚠️ ' + this.getAttribute('data-warning');
+                
+                // Position tooltip
+                var rect = this.getBoundingClientRect();
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                
+                // Calculate position with more spacing above the text
+                var tooltipLeft = rect.left + scrollLeft + rect.width / 2;
+                var tooltipTop = rect.top + scrollTop - 60; // Increased spacing from 35 to 60
+                
+                tooltip.style.left = tooltipLeft + 'px';
+                tooltip.style.top = tooltipTop + 'px';
+                tooltip.style.transform = 'translateX(-50%)';
+                
+                document.body.appendChild(tooltip);
+                
+                // Show tooltip with animation
+                setTimeout(function() {
+                    if (tooltip) {
+                        tooltip.classList.add('show');
+                    }
+                }, 10);
+                
+                // Add bubble floating animation
+                var floatAnimation = setInterval(function() {
+                    if (tooltip && tooltip.classList.contains('show')) {
+                        var currentTransform = tooltip.style.transform;
+                        var yOffset = Math.sin(Date.now() / 1000) * 3; // Slightly more floating movement
+                        tooltip.style.transform = currentTransform.replace(/translateY\([^)]*\)/, '') + ' translateY(' + (-15 + yOffset) + 'px)';
+                    } else {
+                        clearInterval(floatAnimation);
+                    }
+                }, 50);
+            });
+            
+            element.addEventListener('mouseleave', function(e) {
+                if (tooltip) {
+                    tooltip.classList.remove('show');
+                    setTimeout(function() {
+                        if (tooltip && tooltip.parentNode) {
+                            tooltip.remove();
+                        }
+                    }, 300);
+                }
+            });
+        });
+    }
+    
+    // Initialize phishing tooltips immediately
+    addPhishingTooltips();
+    
+    // Re-initialize tooltips when content changes
+    var originalChangeContent = document.getElementById('change-content-btn').onclick;
+    document.getElementById('change-content-btn').addEventListener('click', function() {
+        setTimeout(function() {
+            addPhishingTooltips();
+        }, 100);
+    });
+
 });
-
-
-function initPhishingHelper() {
-	
-}

@@ -142,6 +142,121 @@ function initPhishingHelper() {
             }
         });
 
+        // Listen for the change content button to update dashboard
+        var changeContentBtn = document.getElementById('change-content-btn');
+        if (changeContentBtn) {
+            changeContentBtn.addEventListener('click', function() {
+                var dashboardContent = document.getElementById('dashboard-content');
+                var expandedContent = document.getElementById('expanded-content');
+                
+                // Check current mode based on button text
+                var isShowingNormal = this.textContent === 'Display Phishing Email';
+                
+                if (isShowingNormal) {
+                    // Switching to normal email content - show safe indicators
+                    dashboardContent.innerHTML = `
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 500; margin-bottom: 6px; color: #28a745;">
+                                ✅ Security Status:
+                            </div>
+                            <ul style="margin: 0; padding-left: 16px;">
+                                <li>Verified sender domain</li>
+                                <li>No suspicious patterns detected</li>
+                                <li>All links verified safe</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 500; margin-bottom: 6px; color: #28a745;">
+                                ✅ Safety Checks:
+                            </div>
+                            <ul style="margin: 0; padding-left: 16px;">
+                                <li>Email encrypted in transit</li>
+                                <li>No malicious attachments detected</li>
+                                <li>Sender authentication passed</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="
+                            background: #d4edda;
+                            padding: 10px;
+                            border-radius: 4px;
+                            border-left: 3px solid #28a745;
+                        ">
+                            <div style="font-weight: 500; margin-bottom: 4px; color: #155724;">
+                                💡 Status:
+                            </div>
+                            <div>This email appears to be legitimate and safe to interact with.</div>
+                        </div>
+                    `;
+                    
+                    expandedContent.innerHTML = `
+                        <div style="font-weight: 500; margin-bottom: 8px;">🔍 Detailed Analysis:</div>
+                        <ul style="margin: 0; padding-left: 16px; line-height: 1.5;">
+                            <li>Sender reputation score: 8.7/10</li>
+                            <li>Domain age: 5 years (established)</li>
+                            <li>SPF/DKIM verification: Passed</li>
+                            <li>Geographic origin: Verified corporate network</li>
+                        </ul>
+                        
+                        <div style="margin-top: 12px; padding: 8px; background: #d4edda; border-radius: 4px;">
+                            <strong>Safe to proceed:</strong> This email has passed all security checks.
+                        </div>
+                    `;
+                } else {
+                    // Switching to phishing email content - show warning indicators
+                    dashboardContent.innerHTML = `
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 500; margin-bottom: 6px; color: #dc3545;">
+                                ⚠️ Security Alerts:
+                            </div>
+                            <ul style="margin: 0; padding-left: 16px;">
+                                <li>Suspicious sender domain detected</li>
+                                <li>Urgent language patterns found</li>
+                                <li>Unverified external links present</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 500; margin-bottom: 6px; color: #28a745;">
+                                ✅ Safety Checks:
+                            </div>
+                            <ul style="margin: 0; padding-left: 16px;">
+                                <li>Email encrypted in transit</li>
+                                <li>No malicious attachments detected</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="
+                            background: #f8f9fa;
+                            padding: 10px;
+                            border-radius: 4px;
+                            border-left: 3px solid #ffc107;
+                        ">
+                            <div style="font-weight: 500; margin-bottom: 4px; color: #856404;">
+                                💡 Recommendation:
+                            </div>
+                            <div>Exercise caution before responding or clicking any links.</div>
+                        </div>
+                    `;
+                    
+                    expandedContent.innerHTML = `
+                        <div style="font-weight: 500; margin-bottom: 8px;">🔍 Detailed Analysis:</div>
+                        <ul style="margin: 0; padding-left: 16px; line-height: 1.5;">
+                            <li>Sender reputation score: 2.3/10</li>
+                            <li>Domain age: 3 days (suspicious)</li>
+                            <li>Similar phishing attempts: 127 reported today</li>
+                            <li>Geographic origin: Unknown proxy server</li>
+                        </ul>
+                        
+                        <div style="margin-top: 12px; padding: 8px; background: #fff3cd; border-radius: 4px;">
+                            <strong>Action Required:</strong> Report this email to your IT security team immediately.
+                        </div>
+                    `;
+                }
+            });
+        }
+
         // Add hover effect for the button
         var style = document.createElement('style');
         style.id = 'dashboard-styles';

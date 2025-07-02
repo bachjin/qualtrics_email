@@ -1,3 +1,6 @@
+// Addon 09: Suspicious Element Symbols
+// Add suspicious symbols to specific elements in the email interface
+
 Qualtrics.SurveyEngine.addOnload(function () {
     /*Place your JavaScript here to run when the page loads*/
 
@@ -50,14 +53,14 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
 	var phishyContent = `
 		<p>Dear Valued Customer,</p>
-		<p>We have detected unusual activity on your account that requires immediate attention. 
+		<p>We have detected unusual activity on your account that requires immediate attention<span class="suspicious-indicator warning-mark" title="Warning: Creates false urgency to pressure quick action - a common phishing tactic" style="color: #ff6b6b; cursor: help; font-weight: bold; margin-left: 2px;">⚠️</span>. 
 		Your account security is our top priority.</p>
-		<p>To protect your account, please verify your information by clicking the link below:</p>
+		<p>To protect your account, please verify your information by clicking the link below<span class="suspicious-indicator question-mark" title="Question: Why would a legitimate company ask you to verify via email link instead of directing you to log in normally?" style="color: #ffa500; cursor: help; font-weight: bold; margin-left: 2px;">❓</span>:</p>
 		<p style="text-align: center;">
 			<a href="#" style="color: #0066cc;" onclick="alert('You are phished!'); return false;">Verify Account Now</a>
 		</p>
-		<p>If you do not take action within 24 hours, your account will be temporarily suspended.</p>
-		<p>This is an automated message, please do not reply.</p>
+		<p>If you do not take action within 24 hours, your account will be temporarily suspended<span class="suspicious-indicator warning-mark" title="Warning: Artificial time pressure is designed to make you act without thinking - legitimate companies rarely threaten immediate suspension" style="color: #ff6b6b; cursor: help; font-weight: bold; margin-left: 2px;">⚠️</span>.</p>
+		<p>This is an automated message, please do not reply<span class="suspicious-indicator question-mark" title="Question: Why discourage replies? Legitimate companies want you to contact them if you have concerns" style="color: #ffa500; cursor: help; font-weight: bold; margin-left: 2px;">❓</span>.</p>
 		<p>Best regards,<br>Account Security Team</p>
 	`
 
@@ -358,6 +361,56 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			transform: scale(1.1);
 		}
 		
+		/* Tooltip styles for suspicious indicators */
+		.suspicious-indicator {
+			position: relative;
+			display: inline-block;
+			z-index: 999;
+		}
+		
+		.suspicious-indicator:hover::after {
+			content: attr(title);
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			background: rgba(0, 0, 0, 0.9);
+			color: white;
+			padding: 8px 12px;
+			border-radius: 6px;
+			font-size: 12px;
+			font-weight: normal;
+			white-space: nowrap;
+			max-width: 300px;
+			white-space: normal;
+			width: max-content;
+			max-width: 250px;
+			z-index: 1001;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+			line-height: 1.3;
+		}
+		
+		.suspicious-indicator:hover::before {
+			content: '';
+			position: absolute;
+			bottom: 94%;
+			left: 50%;
+			transform: translateX(-50%);
+			border: 5px solid transparent;
+			border-top-color: rgba(0, 0, 0, 0.9);
+			z-index: 1001;
+		}
+		
+		.warning-mark:hover {
+			color: #ff4757 !important;
+			text-shadow: 0 0 5px rgba(255, 71, 87, 0.5);
+		}
+		
+		.question-mark:hover {
+			color: #ff9500 !important;
+			text-shadow: 0 0 5px rgba(255, 149, 0, 0.5);
+		}
+		
 		/* Ensure AI suggestions box stays within viewport */
 		#reply-section {
 			overflow: visible !important;
@@ -421,6 +474,20 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			
 			#close-ai-mobile {
 				display: flex !important;
+			}
+			
+			/* Mobile tooltip adjustments */
+			.suspicious-indicator:hover::after {
+				position: fixed !important;
+				top: 50% !important;
+				left: 50% !important;
+				transform: translate(-50%, -50%) !important;
+				max-width: 90vw !important;
+				z-index: 1002 !important;
+			}
+			
+			.suspicious-indicator:hover::before {
+				display: none !important;
 			}
 		}
 	`;
@@ -559,10 +626,4 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     });
 
 	// replaced with initPhishingHelper() from separate addons
-	initPhishingHelper();
 });
-
-
-function initPhishingHelper() {
-	
-}

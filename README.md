@@ -107,6 +107,8 @@ Choose one or more addons based on your study requirements:
 // ... paste addon_04.js content ... // Interruption screens
 ```
 
+note that the code for 4, 5, 12 hardcode the whole email interface due to display issues.
+
 ### Configuration
 
 Each addon can be customized by modifying variables at the top of the files:
