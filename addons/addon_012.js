@@ -194,18 +194,17 @@ Qualtrics.SurveyEngine.addOnReady(function () {
                 </div>
             </div>
 
-            <!-- Email Container -->
-		<div id="email-container" style="
+                        <!-- Email Container -->
+            <div id="email-container" class="email-interactions-disabled" style="
                 flex: 1;
-			background: #ffffff;
-			border: 1px solid #e0e0e0;
-			border-radius: 8px;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-			position: relative;
-                opacity: 0.7;
-                pointer-events: none;
+                background: #ffffff;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                position: relative;
+                opacity: 1;
                 transition: all 0.3s ease;
-		">
+            ">
 			<!-- Email Header -->
 			<div id="email-header" style="
 				background: #f8f9fa;
@@ -430,35 +429,23 @@ Qualtrics.SurveyEngine.addOnReady(function () {
                     </div>
                 </div>
 
-                <!-- Quiz Completion Overlay -->
-                <div id="quiz-lock-overlay" style="
+                                <!-- Quiz Status Banner -->
+                <div id="quiz-status-banner" style="
                     position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(255, 255, 255, 0.9);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 8px;
+                    top: 10px;
+                    right: 10px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 500;
                     z-index: 10;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    transition: all 0.3s ease;
                 ">
-                    <div style="
-                        text-align: center;
-                        padding: 30px;
-                        background: white;
-                        border-radius: 12px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                        border: 2px solid #667eea;
-                    ">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🔒</div>
-                        <h3 style="margin: 0 0 10px; color: #333; font-size: 18px;">Complete the Quiz First</h3>
-                        <p style="margin: 0; color: #666; font-size: 14px;">
-                            Finish the security quiz to unlock email interactions
-                        </p>
-                    </div>
-				</div>
+                    🔒 Complete quiz to unlock interactions
+                </div>
 			</div>
 		</div>
 	`;
@@ -498,7 +485,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         
         var optionsHTML = '';
         for (var optIndex = 0; optIndex < question.options.length; optIndex++) {
-            optionsHTML += '<label style="' +
+            optionsHTML += '<label class="quiz-option-label" style="' +
                 'display: block;' +
                 'margin-bottom: 10px;' +
                 'padding: 12px;' +
@@ -508,7 +495,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
                 'cursor: pointer;' +
                 'transition: all 0.2s ease;' +
                 'font-size: 14px;' +
-                '" onmouseover="this.style.background=\'#e9ecef\'" onmouseout="this.style.background=\'#f8f9fa\'">' +
+                '">' +
                 '<input type="radio" name="quiz-option" value="' + optIndex + '" style="margin-right: 10px;">' +
                 question.options[optIndex] +
                 '</label>';
@@ -551,8 +538,22 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         
         options.forEach(function(option) {
             option.addEventListener('change', function() {
+                // Remove selected class from all labels
+                var allLabels = document.querySelectorAll('.quiz-option-label');
+                allLabels.forEach(function(label) {
+                    label.classList.remove('selected');
+                });
+                
+                // Add selected class to the clicked label
+                var selectedLabel = this.closest('.quiz-option-label');
+                if (selectedLabel) {
+                    selectedLabel.classList.add('selected');
+                }
+                
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
+                submitBtn.style.background = '#667eea';
+                submitBtn.style.cursor = 'pointer';
             });
         });
         
@@ -704,11 +705,23 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     // Enable email interactions
     function enableEmailInteractions() {
         var emailContainer = document.getElementById('email-container');
-        var overlay = document.getElementById('quiz-lock-overlay');
+        var statusBanner = document.getElementById('quiz-status-banner');
         
-        emailContainer.style.opacity = '1';
-        emailContainer.style.pointerEvents = 'auto';
-        overlay.style.display = 'none';
+        // Remove the interactions-disabled class to enable all interactions
+        emailContainer.classList.remove('email-interactions-disabled');
+        
+        if (statusBanner) {
+            statusBanner.innerHTML = '✅ Quiz completed - interactions unlocked';
+            statusBanner.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            
+            // Hide the banner after 3 seconds
+            setTimeout(function() {
+                statusBanner.style.opacity = '0';
+                setTimeout(function() {
+                    statusBanner.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
     }
 
     // Add button hover effects and responsive styles
@@ -791,6 +804,53 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			100% { box-shadow: 0 0 5px rgba(253, 121, 168, 0.5); }
 		}
 		
+		/* Quiz option styling */
+		.quiz-option-label:hover {
+			background: #e9ecef !important;
+			transform: translateY(-2px) !important;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+		}
+		
+		.quiz-option-label.selected {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+			color: white !important;
+			border-color: #667eea !important;
+			transform: translateY(-2px) !important;
+			box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3) !important;
+		}
+		
+		.quiz-option-label.selected:hover {
+			background: linear-gradient(135deg, #5a6fd8 0%, #6a42a0 100%) !important;
+		}
+		
+		/* Email scrolling fix */
+		.email-interactions-disabled {
+			pointer-events: none !important;
+		}
+		
+		.email-interactions-disabled #email-body {
+			pointer-events: auto !important;
+		}
+		
+		/* Quiz submit button styling */
+		#submit-answer-btn:disabled {
+			background: #6c757d !important;
+			cursor: not-allowed !important;
+			opacity: 0.6 !important;
+		}
+		
+		#submit-answer-btn:enabled {
+			background: #667eea !important;
+			cursor: pointer !important;
+			opacity: 1 !important;
+		}
+		
+		#submit-answer-btn:enabled:hover {
+			background: #5a6fd8 !important;
+			transform: translateY(-1px) !important;
+			box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+		}
+		
 		/* Quiz dashboard responsive styles */
 		@media (max-width: 1200px) {
 			#main-container {
@@ -806,9 +866,12 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				order: -1 !important;
 			}
 			
-			#email-container {
-				opacity: 0.7 !important;
-				pointer-events: none !important;
+			#quiz-status-banner {
+				position: relative !important;
+				top: auto !important;
+				right: auto !important;
+				margin-bottom: 10px !important;
+				text-align: center !important;
 			}
 		}
 		

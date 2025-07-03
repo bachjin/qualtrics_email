@@ -28,8 +28,7 @@ function initPhishingHelper() {
             <div style="
                 position: fixed;
                 top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
+                right: 20px;
                 background: rgba(255, 255, 255, 0.95);
                 border: 2px solid #333;
                 border-radius: 15px;
@@ -165,6 +164,7 @@ function initPhishingHelper() {
                     gap: 15px !important;
                     padding: 12px !important;
                     top: 10px !important;
+                    right: 10px !important;
                 }
                 
                 #phishing-confidence-indicator > div > div:first-child > div:nth-child(2) {
@@ -198,50 +198,59 @@ function initPhishingHelper() {
             }
         `;
         document.head.appendChild(style);
-
-        // Optional: Add dynamic behavior to change confidence over time or based on user interaction
+        // Initialize with default confidence values
         var currentConfidence = 85; // Bar confidence (phishing likelihood)
         var currentCircleConfidence = 30; // Circle confidence (phishing detection confidence)
-        var riskIndicatorBar = document.getElementById('risk-indicator-bar');
-        var riskPercentageBar = document.getElementById('risk-percentage-bar');
-        var confidenceCircle = document.getElementById('confidence-circle');
-        var confidencePercentage = document.getElementById('confidence-percentage');
-
+        
         // Function to update the bar confidence level
         function updateBarConfidence(newConfidence) {
             currentConfidence = Math.max(0, Math.min(100, newConfidence));
-            riskIndicatorBar.style.width = currentConfidence + '%';
-            riskPercentageBar.textContent = currentConfidence + '%';
-            riskPercentageBar.style.left = currentConfidence + '%';
+            var riskIndicatorBar = document.getElementById('risk-indicator-bar');
+            var riskPercentageBar = document.getElementById('risk-percentage-bar');
             
-            // Update color based on risk level
-            if (currentConfidence < 30) {
-                riskPercentageBar.style.background = '#28a745';
-            } else if (currentConfidence < 70) {
-                riskPercentageBar.style.background = '#ffc107';
-                riskPercentageBar.style.color = '#333';
-            } else {
-                riskPercentageBar.style.background = '#dc3545';
-                riskPercentageBar.style.color = 'white';
+            if (riskIndicatorBar && riskPercentageBar) {
+                riskIndicatorBar.style.width = currentConfidence + '%';
+                riskPercentageBar.textContent = currentConfidence + '%';
+                riskPercentageBar.style.left = currentConfidence + '%';
+                
+                // Update color based on risk level
+                if (currentConfidence < 30) {
+                    riskIndicatorBar.style.background = '#28a745';
+                    riskPercentageBar.style.background = '#28a745';
+                    riskPercentageBar.style.color = 'white';
+                } else if (currentConfidence < 70) {
+                    riskIndicatorBar.style.background = '#ffc107';
+                    riskPercentageBar.style.background = '#ffc107';
+                    riskPercentageBar.style.color = '#333';
+                } else {
+                    riskIndicatorBar.style.background = '#dc3545';
+                    riskPercentageBar.style.background = '#dc3545';
+                    riskPercentageBar.style.color = 'white';
+                }
             }
         }
 
         // Function to update the circle confidence level
         function updateCircleConfidence(newConfidence) {
             currentCircleConfidence = Math.max(0, Math.min(100, newConfidence));
-            var circumference = 2 * Math.PI * 35; // radius = 35
-            var offset = circumference - (currentCircleConfidence / 100) * circumference;
+            var confidenceCircle = document.getElementById('confidence-circle');
+            var confidencePercentage = document.getElementById('confidence-percentage');
             
-            confidenceCircle.style.strokeDashoffset = offset;
-            confidencePercentage.textContent = currentCircleConfidence + '%';
-            
-            // Update circle color based on confidence level
-            if (currentCircleConfidence < 30) {
-                confidenceCircle.style.stroke = '#28a745';
-            } else if (currentCircleConfidence < 70) {
-                confidenceCircle.style.stroke = '#ffc107';
-            } else {
-                confidenceCircle.style.stroke = '#dc3545';
+            if (confidenceCircle && confidencePercentage) {
+                var circumference = 2 * Math.PI * 35; // radius = 35
+                var offset = circumference - (currentCircleConfidence / 100) * circumference;
+                
+                confidenceCircle.style.strokeDashoffset = offset;
+                confidencePercentage.textContent = currentCircleConfidence + '%';
+                
+                // Update circle color based on confidence level
+                if (currentCircleConfidence < 30) {
+                    confidenceCircle.style.stroke = '#dc3545';
+                } else if (currentCircleConfidence < 70) {
+                    confidenceCircle.style.stroke = '#ffc107';
+                } else {
+                    confidenceCircle.style.stroke = '#28a745';
+                }
             }
         }
 
@@ -249,21 +258,26 @@ function initPhishingHelper() {
         updateBarConfidence(85);
         updateCircleConfidence(30);
 
-        // Listen for content change button to update confidence indicators
-        var changeContentBtn = document.getElementById('change-content-btn');
-        
-        if (changeContentBtn) {
-            changeContentBtn.addEventListener('click', function() {
-                // Toggle between high and low confidence when email content changes
-                if (currentConfidence > 50) {
-                    updateBarConfidence(15); // Low risk for normal email
-                    updateCircleConfidence(85); // High confidence for normal email
-                } else {
+        // Track the current mode (starts with phishing content)
+        var isPhishingMode = true;
+
+        // Use event delegation to handle clicks on the change content button
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.id === 'change-content-btn') {
+                // Toggle the mode
+                isPhishingMode = !isPhishingMode;
+                
+                if (isPhishingMode) {
+                    // Switching to phishing email
                     updateBarConfidence(85); // High risk for phishing email
                     updateCircleConfidence(30); // Low confidence for phishing email
+                } else {
+                    // Switching to normal email
+                    updateBarConfidence(15); // Low risk for normal email
+                    updateCircleConfidence(85); // High confidence for normal email
                 }
-            });
-        }
+            }
+        });
 
         console.log('Addon 01: Phishing confidence indicators loaded');
     }, 200);
