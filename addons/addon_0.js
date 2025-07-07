@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 200);
 });
 
-initPhishingHelper();
-
 function initPhishingHelper() {
     // Small delay to ensure email interface is loaded
     setTimeout(function() {
