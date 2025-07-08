@@ -683,9 +683,26 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     function completeQuiz() {
         quizCompleted = true;
         
-        // Show completion screen
+        // Show completion screen briefly, then hide entire quiz
         document.getElementById('question-container').style.display = 'none';
         document.getElementById('quiz-complete').style.display = 'block';
+        
+        // Hide the entire quiz dashboard after a short delay
+        setTimeout(function() {
+            var quizDashboard = document.getElementById('quiz-dashboard');
+            var mainContainer = document.getElementById('main-container');
+            
+            // Add transition for smooth animation
+            quizDashboard.style.transition = 'all 0.5s ease-out';
+            quizDashboard.style.opacity = '0';
+            quizDashboard.style.transform = 'translateX(-100%)';
+            
+            setTimeout(function() {
+                quizDashboard.style.display = 'none';
+                // Update main container to remove gap and make email full width
+                mainContainer.style.gap = '0';
+            }, 500);
+        }, 2000); // Show completion message for 2 seconds
         
         // Enable email interactions
         enableEmailInteractions();
