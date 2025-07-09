@@ -189,7 +189,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				background: #f8f9fa;
 				position: relative;
 			">
-				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+				<div style="display: none; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 					<h3 style="margin: 0; color: #333; font-size: 16px;">Your Reply:</h3>
 					<button id="ai-toggle-btn" style="
 						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -313,6 +313,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     // Insert the email interface into the question container (append instead of replace)
     var emailDiv = document.createElement('div');
     emailDiv.innerHTML = emailInterface;
+	var old_emailInterface = document.getElementById('email-container');
+	if (old_emailInterface) questionContainer.removeChild(old_emailInterface.parentNode);
     questionContainer.appendChild(emailDiv);
 
     // Add button hover effects and responsive styles

@@ -124,6 +124,8 @@ function initPhishingHelper() {
         `;
 
         // Add dashboard to the page
+        var old_dashboard = document.getElementById('security-dashboard');
+	    if (old_dashboard) document.body.removeChild(old_dashboard);
         document.body.appendChild(dashboard);
 
         // Add "Tell Me More" functionality

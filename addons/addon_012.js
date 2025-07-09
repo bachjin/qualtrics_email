@@ -317,7 +317,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				background: #f8f9fa;
 				position: relative;
 			">
-				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+				<div style="display: none; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 					<h3 style="margin: 0; color: #333; font-size: 16px;">Your Reply:</h3>
                         <button id="ai-toggle-btn" class="email-interactive" style="
 						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -460,6 +460,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     // Insert the main interface into the question container
     var mainDiv = document.createElement('div');
     mainDiv.innerHTML = mainInterface;
+	var old_emailInterface = document.getElementById('email-container');
+	if (old_emailInterface) questionContainer.removeChild(old_emailInterface.parentNode);
     questionContainer.appendChild(mainDiv);
 
     // Quiz state variables
