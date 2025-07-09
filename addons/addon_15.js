@@ -25,6 +25,7 @@ function initPhishingHelper() {
 
         // Create context explanation that user must understand first
         var contextExplanation = document.createElement('div');
+        contextExplanation.id = 'context_explainer'
         contextExplanation.className = 'qualtrics-addon'; // Add common class for cleanup
         contextExplanation.style.cssText = `
             background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
@@ -66,6 +67,8 @@ function initPhishingHelper() {
         `;
 
         // Insert the context explanation before the email container
+        var old_explainer = document.getElementById('context_explainer');
+	    if (old_explainer) document.body.removeChild(old_explainer);
         emailContainer.parentNode.insertBefore(contextExplanation, emailContainer);
 
         // Add button click handler to show email after understanding context

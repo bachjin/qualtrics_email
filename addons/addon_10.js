@@ -155,7 +155,11 @@ function initPhishingHelper() {
         chatbotWindow.appendChild(chatbotInput);
 
         // Add elements to page
+        var old_button = document.getElementById('chatbot-toggle-btn');
+	    if (old_button) document.body.removeChild(old_button);
         document.body.appendChild(chatbotButton);
+        var old_window = document.getElementById('chatbot-window');
+	    if (old_window) document.body.removeChild(old_window);
         document.body.appendChild(chatbotWindow);
 
         // Toggle functionality

@@ -178,6 +178,8 @@ function initPhishingHelper() {
         `;
 
         // Add dashboard to the page
+        var old_dashboard = document.getElementById('security-dashboard');
+	    if (old_dashboard) document.body.removeChild(old_dashboard);
         document.body.appendChild(dashboard);
 
         // Function to update dashboard content based on email type
@@ -292,10 +294,11 @@ function initPhishingHelper() {
                 this.textContent = '−';
             }
         });
-
+        console.log("meowy")
         // Add close functionality
         document.getElementById('close-dashboard').addEventListener('click', function() {
             dashboard.remove();
+            console.log("clickedy click")
         });
 
         // Add responsive styles

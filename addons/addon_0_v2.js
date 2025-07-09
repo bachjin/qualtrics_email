@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 200);
 });
 
-initPhishingHelper();
-
 function initPhishingHelper() {
     // Small delay to ensure email interface is loaded
     setTimeout(function() {
@@ -19,6 +17,7 @@ function initPhishingHelper() {
             console.error('Email container not found');
             return;
         }
-        console.log('Addon 00: addon loaded');
+        document.getElementById('ai-assistant').style.display = 'flex';
+        console.log('Addon 00_v2: addon loaded');
     }, 200);
 }

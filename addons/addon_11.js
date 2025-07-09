@@ -137,6 +137,8 @@ function initPhishingHelper() {
         chatbotWindow.appendChild(chatbotContent);
 
         // Add to page
+        var old_chatbot = document.getElementById('descriptive-chatbot');
+	    if (old_chatbot) document.body.removeChild(old_chatbot);    
         document.body.appendChild(chatbotWindow);
 
         console.log('Addon 11: Descriptive chatbot loaded');

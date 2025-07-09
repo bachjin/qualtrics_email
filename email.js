@@ -186,7 +186,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				background: #f8f9fa;
 				position: relative;
 			">
-				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+				<div id="ai-assistant" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 					<h3 style="margin: 0; color: #333; font-size: 16px;">Your Reply:</h3>
 					<button id="ai-toggle-btn" style="
 						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

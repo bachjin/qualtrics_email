@@ -120,6 +120,8 @@ function initPhishingHelper() {
         `;
 
         // Insert the confidence indicator into the page
+        var old_indicator = document.getElementById('confidence-rating-indicator');
+	    if (old_indicator) document.body.removeChild(old_indicator);
         document.body.appendChild(confidenceIndicator);
 
         // Add mobile-responsive styles
