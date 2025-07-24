@@ -849,6 +849,15 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			pointer-events: auto !important;
 		}
 		
+		/* Disable links until quiz is completed */
+		.email-interactions-disabled #email-body a {
+			pointer-events: none !important;
+			color: #0066cc !important;
+			text-decoration: underline !important;
+			cursor: default !important;
+			opacity: 0.5 !important;
+		}
+		
 		/* Quiz submit button styling */
 		#submit-answer-btn:disabled {
 			background: #6c757d !important;
