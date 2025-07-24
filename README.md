@@ -107,7 +107,11 @@ Choose one or more addons based on your study requirements:
 // ... paste addon_04.js content ... // Interruption screens
 ```
 
-note that the code for 4, 5, 12 hardcode the whole email interface due to display issues.
+Note that the code for 4, 5, 6, 9, 10, 12, 13, 14 hardcode the whole email interface due to display issues.
+
+```javascript
+// ... paste addon_004.js content directly into the question's JavaScript
+```
 
 ### Configuration
 
