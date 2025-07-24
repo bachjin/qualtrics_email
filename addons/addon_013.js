@@ -678,19 +678,28 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             changeContentBtn.addEventListener('click', function() {
                 var reportCountElement = document.getElementById('report-count');
                 var reportSummaryElement = document.getElementById('report-summary');
+                var dashboardHeader = reportingDashboard.querySelector('div');
+                var reportContainer = reportCountElement.parentElement;
                 isPhishing = !isPhishing;
                 if (reportCountElement && reportSummaryElement) {
                     if (isPhishing) {
                         var newReportCount = Math.floor(Math.random() * 15) + 3; // 3-17 reports
+                        // Set red background for phishing email
+                        dashboardHeader.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)';
+                        reportContainer.style.background = '#fff5f5';
+                        reportContainer.style.borderColor = '#fed7d7';
                     } else {
                         var newReportCount = 0;
+                        // Set green background for normal email
+                        dashboardHeader.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+                        reportContainer.style.background = '#f0fff4';
+                        reportContainer.style.borderColor = '#c6f6d5';
                     }
                     reportCountElement.textContent = newReportCount;
-                    reportSummaryElement.innerHTML = `
-                        <li>Suspicious links: ` + Math.floor(newReportCount * 0.7) + ` reports</li>
-                        <li>Fake sender: ` + Math.floor(newReportCount * 0.5) + ` reports</li>
-                        <li>Urgent language: ` + Math.floor(newReportCount * 0.8) + ` reports</li>
-                    `;
+                    reportSummaryElement.innerHTML = 
+                        "<li>Suspicious links: " + Math.floor(newReportCount * 0.7) + " reports</li>" +
+                        "<li>Fake sender: " + Math.floor(newReportCount * 0.5) + " reports</li>" +
+                        "<li>Urgent language: " + Math.floor(newReportCount * 0.8) + " reports</li>";
                 }
                 console.log('isPhishing', isPhishing);
                 var warningSection = document.getElementById('warning-section');
