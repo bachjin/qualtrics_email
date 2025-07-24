@@ -20,6 +20,12 @@ Qualtrics.SurveyEngine.addOnUnload(function () {
     addonElements.forEach(function(element) {
         element.remove();
     });
+    
+    // Clean up any tooltips
+    var tooltips = document.querySelectorAll('.link-tooltip');
+    tooltips.forEach(function(tooltip) {
+        tooltip.remove();
+    });
 
 });
 
@@ -47,7 +53,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             <li>New feature adoption rate: 78%</li>
         </ul>
         <p>I'd love to hear your thoughts on these results and discuss next steps for Q2.
-        You can view the detailed report <a href="#" onclick="showInterruptionScreen('link', 'detailed report'); return false;" style="color: #0066cc;">here</a>.</p>
+        You can view the detailed report <a href="#" onclick="showTooltip(event, 'This is a legitimate business email link. In a real scenario, this would open a secure report.', 'normal'); return false;" style="color: #0066cc;">here</a>.</p>
         <p>Best regards,<br>Sarah Johnson</p>
     `
 
@@ -57,7 +63,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		Your account security is our top priority.</p>
 		<p>To protect your account, please verify your information by clicking the link below:</p>
 		<p style="text-align: center;">
-			<a href="#" style="color: #0066cc;" onclick="showInterruptionScreen('link', 'account verification'); return false;">Verify Account Now</a>
+			<a href="#" style="color: #0066cc;" onclick="showTooltip(event, '⚠️ PHISHING ATTEMPT DETECTED! This link would steal your credentials. Never click suspicious links demanding urgent action.', 'warning'); return false;">Verify Account Now</a>
 		</p>
 		<p>If you do not take action within 24 hours, your account will be temporarily suspended.</p>
 		<p>This is an automated message, please do not reply.</p>
@@ -479,6 +485,93 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			}
 		}
 		
+		/* Interactive element highlights */
+		#email-body a[onclick] {
+			padding: 2px 4px;
+			border-radius: 3px;
+			background: rgba(0, 102, 204, 0.1);
+			border: 1px solid rgba(0, 102, 204, 0.3);
+			transition: all 0.2s ease;
+			text-decoration: none;
+			box-shadow: 0 1px 3px rgba(0, 102, 204, 0.1);
+		}
+		
+		#email-body a[onclick]:hover {
+			background: rgba(0, 102, 204, 0.2);
+			border-color: rgba(0, 102, 204, 0.5);
+			box-shadow: 0 2px 6px rgba(0, 102, 204, 0.2);
+			transform: translateY(-1px);
+		}
+		
+		#show-attachments-btn {
+			transition: all 0.2s ease;
+			border: 2px solid rgba(108, 117, 125, 0.3) !important;
+			box-shadow: 0 1px 3px rgba(108, 117, 125, 0.1) !important;
+		}
+		
+		#show-attachments-btn:hover {
+			border-color: rgba(108, 117, 125, 0.6) !important;
+			box-shadow: 0 3px 8px rgba(108, 117, 125, 0.2) !important;
+		}
+
+		/* Tooltip styles */
+		.link-tooltip {
+			position: fixed;
+			background: white;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 16px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+			z-index: 1001;
+			max-width: 300px;
+			font-size: 14px;
+			line-height: 1.4;
+			display: none;
+			animation: tooltipFadeIn 0.2s ease-out;
+		}
+		
+		.link-tooltip.normal {
+			border-left: 4px solid #28a745;
+		}
+		
+		.link-tooltip.warning {
+			border-left: 4px solid #dc3545;
+			background: #fff5f5;
+		}
+		
+		.link-tooltip-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 8px;
+		}
+		
+		.link-tooltip-close {
+			background: none;
+			border: none;
+			font-size: 18px;
+			cursor: pointer;
+			color: #666;
+			padding: 0;
+			margin-left: 8px;
+			line-height: 1;
+		}
+		
+		.link-tooltip-close:hover {
+			color: #333;
+		}
+		
+		@keyframes tooltipFadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(-5px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
 		/* Mobile responsive styles */
 		@media (max-width: 768px) {
 			#email-container {
@@ -524,6 +617,15 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			
 			#close-ai-mobile {
 				display: flex !important;
+			}
+			
+			.link-tooltip {
+				position: fixed !important;
+				top: 50% !important;
+				left: 50% !important;
+				transform: translate(-50%, -50%) !important;
+				width: 90% !important;
+				max-width: 280px !important;
 			}
 		}
 	`;
@@ -597,7 +699,60 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         toggleBtn.innerHTML = '<span style="font-size: 14px;">🤖</span><span>AI Assistant</span>';
     });
 
-    // Interruption screen functionality
+    // Tooltip functionality for links
+    window.showTooltip = function(event, message, type) {
+        event.preventDefault();
+        
+        // Remove any existing tooltip
+        var existingTooltip = document.querySelector('.link-tooltip');
+        if (existingTooltip) {
+            existingTooltip.remove();
+        }
+        
+        // Create new tooltip
+        var tooltip = document.createElement('div');
+        tooltip.className = 'link-tooltip ' + type;
+        tooltip.innerHTML = `
+            <div class="link-tooltip-header">
+                <div style="flex: 1;">` + message + `</div>
+                <button class="link-tooltip-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+            </div>
+        `;
+        
+        document.body.appendChild(tooltip);
+        
+        // Position tooltip near the clicked element
+        var rect = event.target.getBoundingClientRect();
+        var tooltipRect = tooltip.getBoundingClientRect();
+        
+        var left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+        var top = rect.bottom + 10;
+        
+        // Ensure tooltip stays within viewport
+        if (left < 10) left = 10;
+        if (left + tooltipRect.width > window.innerWidth - 10) {
+            left = window.innerWidth - tooltipRect.width - 10;
+        }
+        if (top + tooltipRect.height > window.innerHeight - 10) {
+            top = rect.top - tooltipRect.height - 10;
+        }
+        
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+        tooltip.style.display = 'block';
+        
+        // Close tooltip when clicking outside
+        setTimeout(function() {
+            document.addEventListener('click', function closeTooltip(e) {
+                if (!tooltip.contains(e.target) && e.target !== event.target) {
+                    tooltip.remove();
+                    document.removeEventListener('click', closeTooltip);
+                }
+            });
+        }, 100);
+    };
+
+    // Interruption screen functionality (kept only for attachments)
     var currentInterruptionType = '';
     var currentInterruptionData = '';
 
@@ -610,9 +765,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         
         if (type === 'attachment') {
             actionText.textContent = 'Viewing attachment: ' + actionDescription;
-        } else if (type === 'link') {
-            actionText.textContent = 'Opening external link: ' + actionDescription;
         }
+        // Note: Links now use tooltips instead of interruption screen
         
         modal.style.display = 'flex';
     }
@@ -632,13 +786,6 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             
             attachmentContainer.style.display = 'block';
             attachmentBtn.textContent = '📎 Hide Attachments (1)';
-        } else if (currentInterruptionType === 'link') {
-            // Show different messages based on the link
-            if (currentInterruptionData === 'account verification') {
-                alert('You are phished! This was a phishing attempt.');
-            } else if (currentInterruptionData === 'detailed report') {
-                alert('Normal email - safe link accessed.');
-            }
         }
         
         hideInterruptionScreen();
