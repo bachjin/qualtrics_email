@@ -132,7 +132,33 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				border-top: 1px solid #e0e0e0;
 				display: none;
 			">
-				<img src="https://jollycontrarian.com/images/6/6c/Rickroll.jpg" alt="Example Image" style="max-width: 50%; height: auto; margin: 10px 0;">
+				<div id="attachment-item" style="
+					display: flex;
+					align-items: center;
+					padding: 12px;
+					border: 1px solid #ddd;
+					border-radius: 6px;
+					background: white;
+					box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+				">
+					<div id="attachment-icon" style="
+						font-size: 24px;
+						margin-right: 12px;
+					">📁</div>
+					<div style="flex: 1;">
+						<div id="attachment-name" style="
+							font-weight: 500;
+							color: #333;
+							font-size: 14px;
+						">urgent_security_update.exe</div>
+						<div id="attachment-size" style="
+							color: #666;
+							font-size: 12px;
+							margin-top: 2px;
+						">2.4 MB</div>
+					</div>
+
+				</div>
 			</div>
 
 			<div id="email-actions" style="
@@ -363,16 +389,32 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
     document.getElementById('change-content-btn').addEventListener('click', function () {
         var emailBody = document.getElementById('email-body');
+        var attachmentIcon = document.getElementById('attachment-icon');
+        var attachmentName = document.getElementById('attachment-name');
+        var attachmentSize = document.getElementById('attachment-size');
+        
         isPhishingMode = !isPhishingMode;
 
         if (isPhishingMode) {
+            // Switch to normal email
             emailBody.innerHTML = emailContent;
             this.textContent = 'Display Phishing Email';
             this.style.background = '#fd7e14';
+            
+            // Update attachment to normal business file
+            attachmentIcon.textContent = '📄';
+            attachmentName.textContent = 'Q1_Business_Report.pdf';
+            attachmentSize.textContent = '1.2 MB';
         } else {
+            // Switch to phishing email
             emailBody.innerHTML = phishyContent;
             this.textContent = 'Display Normal Email';
             this.style.background = '#28a745';
+            
+            // Update attachment to suspicious file
+            attachmentIcon.textContent = '📁';
+            attachmentName.textContent = 'urgent_security_update.exe';
+            attachmentSize.textContent = '2.4 MB';
         }
     });
 
