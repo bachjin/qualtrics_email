@@ -115,7 +115,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				text-align: center;
 			">
 				<button id="show-attachments-btn" style="
-					background: #6c757d;
+					background: #17a2b8;
 					color: white;
 					border: none;
 					padding: 8px 16px;
@@ -163,16 +163,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 					font-size: 14px;
 					font-weight: 500;
 				">Delete</button>
-				<button id="back-btn" style="
-					background: #6c757d;
-					color: white;
-					border: none;
-					padding: 10px 20px;
-					border-radius: 4px;
-					cursor: pointer;
-					font-size: 14px;
-					font-weight: 500;
-				">Back</button>
+
 				<button id="change-content-btn" style="
 					background: #28a745;
 					color: white;
@@ -192,25 +183,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				background: #f8f9fa;
 				position: relative;
 			">
-				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+				<div style="margin-bottom: 15px;">
 					<h3 style="margin: 0; color: #333; font-size: 16px;">Your Reply:</h3>
-					<button id="ai-toggle-btn" style="
-						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-						color: white;
-						border: none;
-						padding: 8px 12px;
-						border-radius: 20px;
-						cursor: pointer;
-						font-size: 12px;
-						font-weight: 500;
-						display: flex;
-						align-items: center;
-						gap: 5px;
-						box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-					">
-						<span style="font-size: 14px;">🤖</span>
-						<span>AI Assistant</span>
-					</button>
 				</div>
 				<div style="position: relative;">
 					<textarea id="reply-text" placeholder="Type your reply here..." style="
@@ -225,63 +199,12 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 						resize: vertical;
 						box-sizing: border-box;
 					"></textarea>
-					
-					<!-- AI Suggestions Hover Block -->
-					<div id="ai-suggestions" style="
-						position: fixed;
-						top: 20px;
-						right: 20px;
-						width: 300px;
-						min-height: 200px;
-						max-height: calc(100vh - 40px);
-						overflow-y: auto;
-						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-						border-radius: 12px;
-						padding: 16px;
-						box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-						z-index: 1000;
-						display: none;
-						color: white;
-						font-size: 13px;
-						line-height: 1.4;
-					">
-						<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-							<div style="display: flex; align-items: center; gap: 8px;">
-								<span style="font-size: 18px;">🛡️</span>
-								<strong style="font-size: 14px;">AI Security Assistant</strong>
-							</div>
-							<button id="close-ai-mobile" style="
-								background: rgba(255,255,255,0.2);
-								border: 1px solid rgba(255,255,255,0.3);
-								border-radius: 50%;
-								width: 24px;
-								height: 24px;
-								color: white;
-								cursor: pointer;
-								font-size: 12px;
-								display: flex;
-								align-items: center;
-								justify-content: center;
-								padding: 0;
-							">✕</button>
-						</div>
-						
-						<div id="ai-content" style="margin-bottom: 12px;">
-							<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-								<div style="font-weight: 500; margin-bottom: 4px;">✅ Email Analysis:</div>
-								<div>No phishing indicators detected</div>
-							</div>
-							<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px;">
-								<div style="font-weight: 500; margin-bottom: 4px;">💡 Suggestion:</div>
-								<div>This appears to be a legitimate business email. Safe to reply.</div>
-							</div>
-						</div>
-					</div>
+
 				</div>
 				
 				<div style="margin-top: 10px;">
 					<button id="send-reply-btn" style="
-						background: #28a745;
+						background: #007bff;
 						color: white;
 						border: none;
 						padding: 10px 20px;
@@ -329,58 +252,20 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		}
 		#reply-btn:hover { background: #0056b3 !important; }
 		#delete-btn:hover { background: #c82333 !important; }
-		#back-btn:hover { background: #545b62 !important; }
-		#send-reply-btn:hover { background: #218838 !important; }
+		#show-attachments-btn:hover { background: #138496 !important; }
+
+		#send-reply-btn:hover { background: #0056b3 !important; }
 		#save-draft-btn:hover { background: #e0a800 !important; }
 		#change-content-btn:hover { background: #e8650e !important; }
+		#change-content-btn.phishing-mode:hover { background: #e8650e !important; }
 		#reply-text:focus {
 			outline: none;
 			border-color: #007bff;
 			box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
 		}
+
 		
-		#ai-toggle-btn:hover {
-			transform: translateY(-2px) !important;
-			box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-		}
-		
-		#ai-suggestions {
-			animation: slideIn 0.3s ease-out;
-		}
-		
-		@keyframes slideIn {
-			from {
-				opacity: 0;
-				transform: translateY(-10px);
-			}
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
-		
-		#close-ai-mobile:hover {
-			background: rgba(255,255,255,0.4) !important;
-			transform: scale(1.1);
-		}
-		
-		/* Ensure AI suggestions box stays within viewport */
-		#reply-section {
-			overflow: visible !important;
-		}
-		
-		#email-container {
-			overflow: visible !important;
-		}
-		
-		@media (min-width: 769px) {
-			#ai-suggestions {
-				position: fixed !important;
-				top: 20px !important;
-				right: 20px !important;
-				width: 320px !important;
-			}
-		}
+
 		
 		/* Mobile responsive styles */
 		/* Tooltip styles */
@@ -459,33 +344,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				width: 100% !important;
 			}
 			
-			/* Fix AI toggle button positioning on mobile */
-			#reply-section > div:first-child {
-				flex-direction: column !important;
-				align-items: flex-start !important;
-				gap: 10px !important;
-			}
-			
-			#ai-toggle-btn {
-				align-self: flex-end !important;
-				margin-bottom: 10px !important;
-			}
-			
-			#ai-suggestions {
-				position: fixed !important;
-				top: 50% !important;
-				left: 50% !important;
-				transform: translate(-50%, -50%) !important;
-				width: 90% !important;
-				max-width: 300px !important;
-				min-height: auto !important;
-				max-height: 80vh !important;
-				overflow-y: auto !important;
-			}
-			
-			#close-ai-mobile {
-				display: flex !important;
-			}
+
 			
 			.link-tooltip {
 				position: fixed !important;
@@ -500,72 +359,24 @@ Qualtrics.SurveyEngine.addOnReady(function () {
     document.head.appendChild(style);
 
     // AI Suggestions functionality
-    var aiSuggestionsVisible = false;
     var isPhishingMode = false;
-
-    document.getElementById('ai-toggle-btn').addEventListener('click', function () {
-        var aiSuggestions = document.getElementById('ai-suggestions');
-        aiSuggestionsVisible = !aiSuggestionsVisible;
-
-        if (aiSuggestionsVisible) {
-            aiSuggestions.style.display = 'block';
-            this.style.background = 'linear-gradient(135deg, #dc3545 0%, #6f42c1 100%)';
-            this.innerHTML = '<span style="font-size: 14px;">🤖</span><span>Hide AI</span>';
-        } else {
-            aiSuggestions.style.display = 'none';
-            this.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            this.innerHTML = '<span style="font-size: 14px;">🤖</span><span>AI Assistant</span>';
-        }
-    });
 
     document.getElementById('change-content-btn').addEventListener('click', function () {
         var emailBody = document.getElementById('email-body');
-        var aiContent = document.getElementById('ai-content');
         isPhishingMode = !isPhishingMode;
 
         if (isPhishingMode) {
             emailBody.innerHTML = emailContent;
             this.textContent = 'Display Phishing Email';
-            this.style.background = '#dc3545';
-            // Update AI analysis for normal email
-            aiContent.innerHTML = `
-				<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-					<div style="font-weight: 500; margin-bottom: 4px;">✅ Email Analysis:</div>
-					<div>No phishing indicators detected</div>
-				</div>
-				<div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px;">
-					<div style="font-weight: 500; margin-bottom: 4px;">💡 Suggestion:</div>
-					<div>This appears to be a legitimate business email. Safe to reply.</div>
-				</div>
-			`;
+            this.style.background = '#fd7e14';
         } else {
             emailBody.innerHTML = phishyContent;
             this.textContent = 'Display Normal Email';
             this.style.background = '#28a745';
-            // Update AI analysis for phishing email
-            aiContent.innerHTML = `
-				<div style="background: rgba(220,53,69,0.3); padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(220,53,69,0.5);">
-					<div style="font-weight: 500; margin-bottom: 4px;">⚠️ PHISHING DETECTED:</div>
-					<div>Suspicious sender patterns and unusual urgency detected</div>
-				</div>
-				<div style="background: rgba(220,53,69,0.2); padding: 10px; border-radius: 6px;">
-					<div style="font-weight: 500; margin-bottom: 4px;">🚨 Warning:</div>
-					<div>DO NOT reply or click any links. Report this email immediately.</div>
-				</div>
-			`;
         }
     });
 
-    // Close button functionality for mobile
-    document.getElementById('close-ai-mobile').addEventListener('click', function () {
-        var aiSuggestions = document.getElementById('ai-suggestions');
-        var toggleBtn = document.getElementById('ai-toggle-btn');
-        
-        aiSuggestions.style.display = 'none';
-        aiSuggestionsVisible = false;
-        toggleBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        toggleBtn.innerHTML = '<span style="font-size: 14px;">🤖</span><span>AI Assistant</span>';
-    });
+
 
     // Add button functionality
 	document.getElementById('show-attachments-btn').addEventListener('click', function () {
@@ -586,11 +397,15 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         if (replySection.style.display === 'none') {
             replySection.style.display = 'block';
             this.textContent = 'Hide Reply';
-            this.style.background = '#6c757d';
+            this.style.background = '#6f42c1';
+            this.onmouseover = function() { this.style.background = '#5a2d91'; };
+            this.onmouseout = function() { this.style.background = '#6f42c1'; };
         } else {
             replySection.style.display = 'none';
             this.textContent = 'Reply';
             this.style.background = '#007bff';
+            this.onmouseover = function() { this.style.background = '#0056b3'; };
+            this.onmouseout = function() { this.style.background = '#007bff'; };
         }
         replyText.focus();
     });
@@ -602,10 +417,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
         }
     });
 
-    document.getElementById('back-btn').addEventListener('click', function () {
-        alert('Going back to email list...');
-        // In a real scenario, you might navigate to the previous page
-    });
+
 
     document.getElementById('send-reply-btn').addEventListener('click', function () {
         var replyText = document.getElementById('reply-text').value.trim();
