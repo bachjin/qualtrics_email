@@ -165,31 +165,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				padding: 15px 20px;
 				background: #f8f9fa;
 				border-top: 1px solid #e0e0e0;
-				display: flex;
-				gap: 10px;
-				flex-wrap: wrap;
+				text-align: center;
 			">
-				<button id="reply-btn" style="
-					background: #007bff;
-					color: white;
-					border: none;
-					padding: 10px 20px;
-					border-radius: 4px;
-					cursor: pointer;
-					font-size: 14px;
-					font-weight: 500;
-				">Reply</button>
-				<button id="delete-btn" style="
-					background: #dc3545;
-					color: white;
-					border: none;
-					padding: 10px 20px;
-					border-radius: 4px;
-					cursor: pointer;
-					font-size: 14px;
-					font-weight: 500;
-				">Delete</button>
-
 				<button id="change-content-btn" style="
 					background: #28a745;
 					color: white;
@@ -201,57 +178,7 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 					font-weight: 500;
 				">Display Normal Email</button>
 			</div>
-			
-			<!-- Reply Section (shown by default) -->
-			<div id="reply-section" style="
-				padding: 20px;
-				border-top: 1px solid #e0e0e0;
-				background: #f8f9fa;
-				position: relative;
-			">
-				<div style="margin-bottom: 15px;">
-					<h3 style="margin: 0; color: #333; font-size: 16px;">Your Reply:</h3>
-				</div>
-				<div style="position: relative;">
-					<textarea id="reply-text" placeholder="Type your reply here..." style="
-						width: 100%;
-						height: 120px;
-						padding: 12px;
-						border: 1px solid #ccc;
-						border-radius: 4px;
-						font-family: inherit;
-						font-size: 14px;
-						line-height: 1.4;
-						resize: vertical;
-						box-sizing: border-box;
-					"></textarea>
 
-				</div>
-				
-				<div style="margin-top: 10px;">
-					<button id="send-reply-btn" style="
-						background: #007bff;
-						color: white;
-						border: none;
-						padding: 10px 20px;
-						border-radius: 4px;
-						cursor: pointer;
-						font-size: 14px;
-						font-weight: 500;
-						margin-right: 10px;
-					">Send Reply</button>
-					<button id="save-draft-btn" style="
-						background: #ffc107;
-						color: #212529;
-						border: none;
-						padding: 10px 20px;
-						border-radius: 4px;
-						cursor: pointer;
-						font-size: 14px;
-						font-weight: 500;
-					">Save Draft</button>
-				</div>
-			</div>
 		</div>
 	`;
 
@@ -276,19 +203,10 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 			transform: translateY(-1px);
 			transition: all 0.2s ease;
 		}
-		#reply-btn:hover { background: #0056b3 !important; }
-		#delete-btn:hover { background: #c82333 !important; }
 		#show-attachments-btn:hover { background: #138496 !important; }
+		#change-content-btn:hover { background: #218838 !important; }
+		#change-content-btn.phishing-mode:hover { background: #c82333 !important; }
 
-		#send-reply-btn:hover { background: #0056b3 !important; }
-		#save-draft-btn:hover { background: #e0a800 !important; }
-		#change-content-btn:hover { background: #e8650e !important; }
-		#change-content-btn.phishing-mode:hover { background: #e8650e !important; }
-		#reply-text:focus {
-			outline: none;
-			border-color: #007bff;
-			box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-		}
 
 		
 
@@ -359,12 +277,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 				border-left: none !important;
 				border-right: none !important;
 			}
-			#email-header, #email-body, #email-actions, #reply-section {
+			#email-header, #email-body, #email-actions {
 				padding: 15px !important;
-			}
-			#email-actions {
-				flex-direction: column !important;
-				gap: 8px !important;
 			}
 			#email-actions button {
 				width: 100% !important;
@@ -399,7 +313,9 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             // Switch to normal email
             emailBody.innerHTML = emailContent;
             this.textContent = 'Display Phishing Email';
-            this.style.background = '#fd7e14';
+            this.style.background = '#dc3545';
+            this.onmouseover = function() { this.style.background = '#c82333'; };
+            this.onmouseout = function() { this.style.background = '#dc3545'; };
             
             // Update attachment to normal business file
             attachmentIcon.textContent = '📄';
@@ -410,6 +326,8 @@ Qualtrics.SurveyEngine.addOnReady(function () {
             emailBody.innerHTML = phishyContent;
             this.textContent = 'Display Normal Email';
             this.style.background = '#28a745';
+            this.onmouseover = function() { this.style.background = '#218838'; };
+            this.onmouseout = function() { this.style.background = '#28a745'; };
             
             // Update attachment to suspicious file
             attachmentIcon.textContent = '📁';
@@ -432,58 +350,17 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 		}
 	});
 
-    document.getElementById('reply-btn').addEventListener('click', function () {
-        var replySection = document.getElementById('reply-section');
-        var replyText = document.getElementById('reply-text');
-
-        if (replySection.style.display === 'none') {
-            replySection.style.display = 'block';
-            this.textContent = 'Hide Reply';
-            this.style.background = '#6f42c1';
-            this.onmouseover = function() { this.style.background = '#5a2d91'; };
-            this.onmouseout = function() { this.style.background = '#6f42c1'; };
-        } else {
-            replySection.style.display = 'none';
-            this.textContent = 'Reply';
-            this.style.background = '#007bff';
-            this.onmouseover = function() { this.style.background = '#0056b3'; };
-            this.onmouseout = function() { this.style.background = '#007bff'; };
-        }
-        replyText.focus();
-    });
-
-    document.getElementById('delete-btn').addEventListener('click', function () {
-        if (confirm('Are you sure you want to delete this email?')) {
-            alert('Email deleted successfully!');
-            // In a real scenario, you might hide the email or redirect
-        }
-    });
 
 
 
-    document.getElementById('send-reply-btn').addEventListener('click', function () {
-        var replyText = document.getElementById('reply-text').value.trim();
-        if (replyText) {
-            alert('Reply sent successfully!');
-            document.getElementById('reply-text').value = '';
-        } else {
-            alert('Please enter a reply message.');
-        }
-    });
 
-    document.getElementById('save-draft-btn').addEventListener('click', function () {
-        var replyText = document.getElementById('reply-text').value.trim();
-        if (replyText) {
-            alert('Draft saved successfully!');
-        } else {
-            alert('Please enter some text to save as draft.');
-        }
-    });
 
-    // Store reply text in Qualtrics embedded data (optional)
-    document.getElementById('reply-text').addEventListener('input', function () {
-        Qualtrics.SurveyEngine.setEmbeddedData('emailReply', this.value);
-    });
+
+
+
+
+
+
 
     // Tooltip functionality for links
     window.showTooltip = function(event, message, type) {
