@@ -1,0 +1,36 @@
+<!-- # JavaScript Code Style Rules
+
+## String Concatenation Rules
+- Only use template literals (backticks with ${}) for existing code that already has them
+- For NEW variables being added to strings, ALWAYS use string concatenation with the + operator
+- Examples:
+  - ❌ BAD (for new code): `Hello ${name}!`
+  - ✅ GOOD (for new code): "Hello " + name + "!"
+  - ✅ ALLOWED (existing code): Keep existing backticks unchanged
+
+## General JavaScript Guidelines
+- Don't change the existing code that already uses backticks
+- Only use explicit string concatenation when adding new variables to strings
+- When building multi-line strings with new variables, use concatenation across multiple lines
+- Example for multi-line with new variables:
+  ```javascript
+  const message = "This is a long message " +
+                  "that spans multiple lines " +
+                  "using concatenation for new variable content: " + variableName;
+  ```
+
+## Code Generation Instructions
+When generating or modifying JavaScript code:
+1. Leave existing template literals unchanged
+2. Use the + operator to join strings and variables for new code
+3. Maintain readability by adding spaces around the + operator
+4. For complex string building with new variables, consider using an array with join() method as an alternative
+5. Only apply concatenation rules when adding new variables to existing strings
+
+## String Modification Guidelines
+- If a string already exists as a complete literal (with or without backticks), leave it as is
+- Only apply concatenation rules when adding new variables or dynamic content to strings
+- Preserve existing string structure and formatting
+- Use + concatenation only for new variable interpolation
+
+Remember: The goal is to preserve existing template literals while using traditional string concatenation only when adding new variables to the codebase. -->
